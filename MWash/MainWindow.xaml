@@ -33,13 +33,13 @@
                     FontSize="20"
                     FontWeight="DemiBold"
                     Margin="45"/>
-            
+
             <Button Grid.Column ="1" 
                     Content="Зарплата"
                     FontSize="20"
                     FontWeight="DemiBold"
                     Margin="45"/>
-            
+
             <Button Grid.Column ="2" 
                     Content="Керування" 
                     FontSize="20"
