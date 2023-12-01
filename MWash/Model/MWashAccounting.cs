@@ -16,7 +16,6 @@ namespace MWash
         {
             ServiceRecords = new ObservableCollection<ServiceRecord>();
         }
-
         
         // Метод для додавання нового запису про надану послугу
         public void AddServiceRecord(ServiceRecord serviceRecord)
@@ -89,24 +88,23 @@ namespace MWash
         {
             var employeeRecords = ServiceRecords.Where(record => record.Employees.Any(emp => emp.Id == employee.Id)).ToList();
             var totalEmployeeIncome = 0;
-            var totalRecords = 0;
 
             foreach (var record in employeeRecords)
             {
-                foreach (var emp in record.Employees)
+                var numberOfEmployees = record.Employees.Count; // Отримати кількість працівників, які беруть участь у послузі
+                var employeeShare = record.Service.ServiceCost / numberOfEmployees; // Розподілити вартість послуги між працівниками
+
+                if (record.Employees.Any(emp => emp.Id == employee.Id))
                 {
-                    if (emp.Id == employee.Id)
-                    {
-                        totalEmployeeIncome += record.Service.ServiceCost;
-                        totalRecords++;
-                    }
+                    totalEmployeeIncome += employeeShare; // Додати до загального доходу працівника його частку вартості послуги
                 }
             }
 
-            var employeeDailySalary = totalEmployeeIncome * 0.5 / totalRecords;
+            var employeeDailySalary = totalEmployeeIncome * 0.5; // Розрахувати зарплату працівника
 
             return employeeDailySalary;
         }
+
 
 
         public List<(string Employee, string Service, int Price, DateTime Time)> GetServiceDataForGrid(DateTime date)
