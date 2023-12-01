@@ -22,35 +22,36 @@ namespace MWash
             ServiceRecords.Add(serviceRecord);
         }
 
-        // Метод для додавання нового працівника
-        public void AddEmployee(Employee employee)
-        {
-            // Логіка для додавання працівника
-        }
-
-        // Метод для видалення працівника
-        public void RemoveEmployee(Employee employee)
-        {
-            // Логіка для видалення працівника
-        }
-
-        // Метод для додавання нової послуги
-        public void AddService(Service service)
-        {
-            // Логіка для додавання нової послуги
-        }
-
         // Метод для генерації щоденного звіту
         public void GenerateDailyReport(DateTime date)
         {
-            // Логіка для генерації щоденного звіту
+            // Фільтрація записів за вказану дату
+            var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
+
+            // Формування звіту на основі отриманих записів
+            foreach (var record in recordsForDate)
+            {
+                // Опрацювання кожного запису та формування звіту
+                // Наприклад, виведення інформації про надані послуги та їх кількість за день
+                Console.WriteLine($"Employee: {record.Employee.FirstName} {record.Employee.LastName}, Service: {record.Service.ServiceName}, Start Time: {record.StartTime}, End Time: {record.EndTime}");
+            }
+
+            // Розрахунок і виведення загальної суми заробленої за день
+            var totalDailyIncome = recordsForDate.Sum(record => record.Service.ServiceCost);
+            Console.WriteLine($"Total income for {date.Date}: {totalDailyIncome} UAH");
         }
 
         // Метод для розрахунку щоденної зарплати для працівника
         public void CalculateDailySalary(Employee employee)
         {
-            // Логіка для розрахунку щоденної зарплати працівника
-            // Наприклад, можна використовувати інформацію з ServiceRecords для розрахунку зарплати працівника за певний день
+            // Фільтрація записів за працівником
+            var employeeRecords = ServiceRecords.Where(record => record.Employee.Id == employee.Id).ToList();
+
+            // Розрахунок зарплати на основі вартості послуг працівника за день
+            var employeeDailyIncome = employeeRecords.Sum(record => record.Service.ServiceCost);
+            var employeeDailySalary = employeeDailyIncome * 0.5; // Заробітня плата становить 50% від вартості наданих послуг
+
+            Console.WriteLine($"Daily salary for {employee.FirstName} {employee.LastName}: {employeeDailySalary} UAH");
         }
 
         // Можливо, інші методи для реалізації функціональних вимог
