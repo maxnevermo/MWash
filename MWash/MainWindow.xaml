@@ -27,7 +27,7 @@
                       BorderThickness="1.5"
                       Grid.Row="6"
                       Height="500"
-                      x:Name="ProductDataGrid">
+                      x:Name="ServiceDataGrid">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" />
 
