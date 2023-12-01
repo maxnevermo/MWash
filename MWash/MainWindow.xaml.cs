@@ -32,7 +32,7 @@ namespace MWash
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
             Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
-            Salary.IsHitTestVisible = true;
+            Salary.IsHitTestVisible = false;
                         
         }
 
