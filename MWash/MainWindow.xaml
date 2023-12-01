@@ -22,11 +22,14 @@
 
         <StackPanel>
             <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
-      Grid.Row="6"
-              Height="525"
-      x:Name="ProductDataGrid">
+                      Margin="30"
+                      BorderBrush="#000"
+                      BorderThickness="1.5"
+                      Grid.Row="6"
+                      Height="500"
+                      x:Name="ProductDataGrid">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="300"/>
+                    <DataGridTemplateColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" />
 
 
                     <DataGridTextColumn Header="Employee" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Employee}"/>
@@ -39,7 +42,7 @@
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>                    
 
-                    <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="auto">
+                    <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -225,6 +228,9 @@
                     <StackPanel>
                         <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
                                     Grid.Row="6"
+                                    Margin="30"
+                                    BorderBrush="#000"
+                                    BorderThickness="1.5"
                                     Height="525"
                                     x:Name="EmployeesDataGrid">
                             <DataGrid.Columns>
@@ -235,7 +241,7 @@
                                 <DataGridTextColumn Header="Name" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Phone number" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Phone}"/>
 
-                                <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="auto">
+                                <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
