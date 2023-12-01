@@ -17,44 +17,99 @@ namespace MWash
             ServiceRecords = new ObservableCollection<ServiceRecord>();
         }
 
+        
+        // Метод для додавання нового запису про надану послугу
         public void AddServiceRecord(ServiceRecord serviceRecord)
         {
-            ServiceRecords.Add(serviceRecord);
+            // Перевірка наявності вільних боксів перед додаванням нового запису про надану послугу
+            var numberOfOccupiedBoxes = ServiceRecords
+                .Count(record => record.StartTime <= serviceRecord.EndTime && record.EndTime >= serviceRecord.StartTime);
+
+            // Якщо кількість зайнятих боксів менше двох, можна додати новий запис про надану послугу
+            if (numberOfOccupiedBoxes < 2)
+            {
+                ServiceRecords.Add(serviceRecord);
+                Console.WriteLine("Service record added successfully.");
+            }
+            else
+            {
+                Console.WriteLine("All service boxes are currently occupied. Cannot add new service record.");
+            }
         }
 
-        // Метод для генерації щоденного звіту
-        public void GenerateDailyReport(DateTime date)
-        {
-            // Фільтрація записів за вказану дату
-            var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
 
-            // Формування звіту на основі отриманих записів
+        public List<(string ServiceName, int TotalTime, int TotalPrice)> GenerateDailyReport(DateTime date)
+        {
+            var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
+            var serviceData = new Dictionary<string, (int totalTime, int totalPrice)>();
+            var serviceReport = new List<(string ServiceName, int TotalTime, int TotalPrice)>();
+
             foreach (var record in recordsForDate)
             {
-                // Опрацювання кожного запису та формування звіту
-                // Наприклад, виведення інформації про надані послуги та їх кількість за день
-                Console.WriteLine($"Employee: {record.Employee.FirstName} {record.Employee.LastName}, Service: {record.Service.ServiceName}, Start Time: {record.StartTime}, End Time: {record.EndTime}");
+                var serviceName = record.Service.ServiceName;
+                var serviceTime = (int)(record.EndTime - record.StartTime).TotalMinutes;
+                var servicePrice = record.Service.ServiceCost;
+
+                if (serviceData.ContainsKey(serviceName))
+                {
+                    var currentData = serviceData[serviceName];
+                    serviceData[serviceName] = (currentData.totalTime + serviceTime, currentData.totalPrice + servicePrice);
+                }
+                else
+                {
+                    serviceData.Add(serviceName, (serviceTime, servicePrice));
+                }
             }
 
-            // Розрахунок і виведення загальної суми заробленої за день
-            var totalDailyIncome = recordsForDate.Sum(record => record.Service.ServiceCost);
-            Console.WriteLine($"Total income for {date.Date}: {totalDailyIncome} UAH");
+            foreach (var serviceEntry in serviceData)
+            {
+                serviceReport.Add((serviceEntry.Key, serviceEntry.Value.totalTime, serviceEntry.Value.totalPrice));
+            }
+
+            return serviceReport;
         }
 
-        // Метод для розрахунку щоденної зарплати для працівника
-        public void CalculateDailySalary(Employee employee)
+        public List<(string EmployeeName, string ServiceName, DateTime StartTime, DateTime EndTime)> GenerateDailyReportForEmployees(DateTime date)
         {
-            // Фільтрація записів за працівником
-            var employeeRecords = ServiceRecords.Where(record => record.Employee.Id == employee.Id).ToList();
+            var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
+            var employeeReport = new List<(string EmployeeName, string ServiceName, DateTime StartTime, DateTime EndTime)>();
 
-            // Розрахунок зарплати на основі вартості послуг працівника за день
-            var employeeDailyIncome = employeeRecords.Sum(record => record.Service.ServiceCost);
-            var employeeDailySalary = employeeDailyIncome * 0.5; // Заробітня плата становить 50% від вартості наданих послуг
+            foreach (var record in recordsForDate)
+            {
+                foreach (var employee in record.Employees)
+                {
+                    employeeReport.Add(($"{employee.FirstName} {employee.LastName}", record.Service.ServiceName, record.StartTime, record.EndTime));
+                }
+            }
 
-            Console.WriteLine($"Daily salary for {employee.FirstName} {employee.LastName}: {employeeDailySalary} UAH");
+            return employeeReport;
         }
 
-        // Можливо, інші методи для реалізації функціональних вимог
+        public double CalculateDailySalary(Employee employee)
+        {
+            var employeeRecords = ServiceRecords.Where(record => record.Employees.Any(emp => emp.Id == employee.Id)).ToList();
+            var totalEmployeeIncome = 0;
+            var totalRecords = 0;
+
+            foreach (var record in employeeRecords)
+            {
+                foreach (var emp in record.Employees)
+                {
+                    if (emp.Id == employee.Id)
+                    {
+                        totalEmployeeIncome += record.Service.ServiceCost;
+                        totalRecords++;
+                    }
+                }
+            }
+
+            var employeeDailySalary = totalEmployeeIncome * 0.5 / totalRecords;
+
+            return employeeDailySalary;
+        }
+
+
+
         // ...
     }
 }
