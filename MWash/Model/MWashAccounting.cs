@@ -128,5 +128,17 @@ namespace MWash
 
 
         // ...
+        public List<Employee> GetEmployees()
+        {
+            List<Employee> allEmployees = new List<Employee>();
+
+            foreach (var record in ServiceRecords)
+            {
+                allEmployees.AddRange(record.Employees);
+            }
+
+            // Повертаємо унікальних працівників, видаливши дублікати за ID
+            return allEmployees.GroupBy(emp => emp.Id).Select(group => group.First()).ToList();
+        }
     }
 }

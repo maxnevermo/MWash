@@ -29,7 +29,7 @@
                       Height="500"
                       x:Name="ServiceDataGrid">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" />
+                    <DataGridTextColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" Binding="{Binding Number}"/>
 
 
                     <DataGridTextColumn Header="Employee" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Employee}"/>
@@ -153,16 +153,16 @@
                     Style="{StaticResource NoHoverButtonStyle}"/>
             <Border Background="#fff" Width="610" Height="375" CornerRadius="15">
                 <Grid>
-                    <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
+                    <DataGrid x:Name="SalaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
                               Margin="30"
                                 BorderBrush="#000"
                                 BorderThickness="1.5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Surname" Width="*">
+                            <DataGridTextColumn Header="Surname" Width="*" Binding="{Binding Surname}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Name" Width="*">
+                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Salary" Width="*">
+                            <DataGridTextColumn Header="Salary" Width="*" Binding="{Binding Salary}">
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -290,5 +290,4 @@
             </Border>
         </Grid>
         </Grid>
-    </Grid>
 </Window>
