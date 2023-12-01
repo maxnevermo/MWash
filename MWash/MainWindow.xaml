@@ -23,7 +23,17 @@
                 Margin="20,20,30,20" 
                 Content="Додати послугу"
                 FontSize="20"
-                FontWeight="DemiBold"/>
+                FontWeight="DemiBold"
+                Background="#96BBF3"
+                BorderThickness="1.5"
+                BorderBrush="#000000">
+
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="20"/>
+                </Style>
+            </Button.Resources>
+        </Button>
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -32,23 +42,52 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-                <Button Grid.Column ="0" 
+            <Button Grid.Column ="0" 
                     Content="Звіт" 
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"/>
+                    Margin="45"
+                    Background="#96BBF3"
+                    BorderThickness="1.5"
+                    BorderBrush="#000000">
+
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="20"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
 
             <Button Grid.Column ="1" 
                     Content="Зарплата"
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"/>
+                    Margin="45"
+                    Background="#96BBF3"
+                    BorderThickness="1.5"
+                    BorderBrush="#000000">
+
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+            </Button>
 
             <Button Grid.Column ="2" 
-                    Content="Керування" 
+                    Content="Керування"
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"/>
+                    Margin="45"
+                    Background="#96BBF3"
+                    BorderThickness="1.5"
+                    BorderBrush="#000000">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="20"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
 
         </Grid>
 
