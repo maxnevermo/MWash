@@ -26,6 +26,14 @@ namespace MWash
             InitializeComponent();
         }
 
+        private void openSalaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Salary.IsHitTestVisible = true;
+        }
+
         private void exitSalaryButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
@@ -34,12 +42,67 @@ namespace MWash
             Salary.IsHitTestVisible = false;
         }
 
-        private void openSalaryButton_Click(object sender, RoutedEventArgs e)
+        private void openReportButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
-            Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+            Report.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
-            Salary.IsHitTestVisible = true;
+            Report.IsHitTestVisible = true;
+        }
+
+        private void exitReportButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            Report.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Report.IsHitTestVisible = false;
+        }
+
+        private void openServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Service.IsHitTestVisible = true;
+        }
+
+        private void exitServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Service.IsHitTestVisible = false;
+        }
+
+        private void openEmployeesButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            Employees.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Employees.IsHitTestVisible = true;
+        }
+
+        private void exitEmployeesButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            Employees.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Employees.IsHitTestVisible = false;
+        }
+        private void openAddEmployeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            AddEmployee.IsHitTestVisible = true;
+        }
+
+        private void exitAddEmployeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            AddEmployee.IsHitTestVisible = false;
         }
     }
 }
