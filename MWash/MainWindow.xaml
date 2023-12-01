@@ -28,7 +28,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column ="0" 
+                <Button Grid.Column ="0" 
                     Content="Звіт" 
                     FontSize="20"
                     FontWeight="DemiBold"
