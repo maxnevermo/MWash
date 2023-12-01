@@ -141,17 +141,16 @@
                         <Setter Property="CornerRadius" Value="20"/>
                     </Style>
                 </Button.Resources>
-            </Button>
-
+          </Button>
         </Grid>
-        
+      
+        <!--тут міняєш опасіті на 1 шоб бачити шо редачиш а потмі назад на 0 перед запуском проги. відкривається на кнопку зарплата я вже підключила-->
         <!--Salary window-->
         <Grid x:Name="Salary" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Button Background="#000000" 
                     Opacity="0.3" 
                     Click="exitSalaryButton_Click" 
                     Style="{StaticResource NoHoverButtonStyle}"/>
-
             <Border Background="#fff" Width="610" Height="375" CornerRadius="15">
                 <Grid>
                     <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
@@ -290,6 +289,6 @@
                 </Grid>
             </Border>
         </Grid>
-
+        </Grid>
     </Grid>
 </Window>
