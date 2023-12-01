@@ -17,7 +17,9 @@
                 Width="300" 
                 HorizontalAlignment="Right" 
                 Margin="20,20,30,20" 
-                Content="Додати послугу"/>
+                Content="Додати послугу"
+                FontSize="20"
+                FontWeight="DemiBold"/>
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -25,17 +27,23 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            
-            <Button Grid.Column ="0" 
+
+                <Button Grid.Column ="0" 
                     Content="Звіт" 
+                    FontSize="20"
+                    FontWeight="DemiBold"
                     Margin="45"/>
             
             <Button Grid.Column ="1" 
-                    Content="Зарплата" 
+                    Content="Зарплата"
+                    FontSize="20"
+                    FontWeight="DemiBold"
                     Margin="45"/>
             
             <Button Grid.Column ="2" 
                     Content="Керування" 
+                    FontSize="20"
+                    FontWeight="DemiBold"
                     Margin="45"/>
 
         </Grid>
