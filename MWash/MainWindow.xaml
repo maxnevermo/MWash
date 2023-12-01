@@ -153,57 +153,18 @@
                     Style="{StaticResource NoHoverButtonStyle}"/>
             <Border Background="#fff" Width="610" Height="375" CornerRadius="15">
                 <Grid>
-                    <DataGrid AutoGenerateColumns="False"  Margin="53,40,53,39">
+                    <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
+                              Margin="30"
+                                BorderBrush="#000"
+                                BorderThickness="1.5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Surname" Width="168">
-                                <DataGridTextColumn.HeaderStyle>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Background" Value="White"/>
-                                        <Setter Property="Height" Value="50"/>
-                                        <Setter Property="FontSize" Value="15" />
-                                        <Setter Property="FontWeight" Value="DemiBold"/>
-                                    </Style>
-                                </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn Header="Surname" Width="*">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Name" Width="168">
-                                <DataGridTextColumn.HeaderStyle>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Background" Value="White"/>
-                                        <Setter Property="Height" Value="50"/>
-                                        <Setter Property="FontSize" Value="15" />
-                                        <Setter Property="FontWeight" Value="DemiBold"/>
-                                    </Style>
-                                </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn Header="Name" Width="*">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Salary" Width="168">
-                                <DataGridTextColumn.HeaderStyle>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Background" Value="White"/>
-                                        <Setter Property="Height" Value="50"/>
-                                        <Setter Property="FontSize" Value="15" />
-                                        <Setter Property="FontWeight" Value="DemiBold"/>
-                                    </Style>
-                                </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn Header="Salary" Width="*">
                             </DataGridTextColumn>
                         </DataGrid.Columns>
-                        <DataGrid.Style>
-                            <Style TargetType="DataGrid">
-                                <Setter Property="BorderBrush" Value="Black"/>
-                                <Setter Property="BorderThickness" Value="2"/>
-                                <Setter Property="Background" Value="White"/>
-                            </Style>
-                        </DataGrid.Style>
-                        <DataGrid.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10"/>
-                            </Style>
-                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </Border>
