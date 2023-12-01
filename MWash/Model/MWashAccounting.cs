@@ -109,6 +109,23 @@ namespace MWash
         }
 
 
+        public List<(string Employee, string Service, int Price, DateTime Time)> GetServiceDataForGrid(DateTime date)
+        {
+            var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
+            var serviceDataForGrid = new List<(string Employee, string Service, int Price, DateTime Time)>();
+
+            foreach (var record in recordsForDate)
+            {
+                foreach (var employee in record.Employees)
+                {
+                    serviceDataForGrid.Add(($"{employee.FirstName} {employee.LastName}", record.Service.ServiceName, record.Service.ServiceCost, record.StartTime));
+                }
+            }
+
+            return serviceDataForGrid;
+        }
+
+
 
         // ...
     }
