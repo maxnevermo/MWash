@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -23,6 +24,22 @@ namespace MWash
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void exitSalaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Salary.IsHitTestVisible = false;
+        }
+
+        private void openSalaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            Salary.IsHitTestVisible = true;
         }
     }
 }
