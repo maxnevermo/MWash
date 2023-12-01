@@ -18,9 +18,9 @@
         </StackPanel>
 
         <Button Grid.Row = "1" 
-                Width="300" 
+                Width="280" 
                 HorizontalAlignment="Right" 
-                Margin="20,20,30,20" 
+                Margin="20,20,40,20" 
                 Content="Додати послугу"
                 FontSize="20"
                 FontWeight="DemiBold"
@@ -43,10 +43,11 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column ="0" 
+                    Height="50"
                     Content="Звіт" 
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"
+                    Margin="45,0,45,0"
                     Background="#96BBF3"
                     BorderThickness="1.5"
                     BorderBrush="#000000">
@@ -59,10 +60,11 @@
             </Button>
 
             <Button Grid.Column ="1" 
+                    Height="50"
                     Content="Зарплата"
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"
+                    Margin="45,0,45,0"
                     Background="#96BBF3"
                     BorderThickness="1.5"
                     BorderBrush="#000000">
@@ -75,10 +77,11 @@
             </Button>
 
             <Button Grid.Column ="2" 
+                    Height="50"
                     Content="Керування"
                     FontSize="20"
                     FontWeight="DemiBold"
-                    Margin="45"
+                    Margin="45,0,45,0"
                     Background="#96BBF3"
                     BorderThickness="1.5"
                     BorderBrush="#000000">
