@@ -1,4 +1,4 @@
-﻿using MWash.Model;
+﻿using MWash;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +10,6 @@ namespace MWash
 {
     public class MWashAccounting
     {
-        // Колекція для зберігання записів про надані послуги
         public ObservableCollection<ServiceRecord> ServiceRecords { get; private set; }
 
         public MWashAccounting()
@@ -18,21 +17,43 @@ namespace MWash
             ServiceRecords = new ObservableCollection<ServiceRecord>();
         }
 
-        // Метод для додавання нового запису про надану послугу
         public void AddServiceRecord(ServiceRecord serviceRecord)
         {
             ServiceRecords.Add(serviceRecord);
         }
 
-        // Інші методи для реалізації функціональних вимог
+        // Метод для додавання нового працівника
+        public void AddEmployee(Employee employee)
+        {
+            // Логіка для додавання працівника
+        }
 
-        // Наприклад, методи для керування працівниками, додавання та видалення послуг тощо
+        // Метод для видалення працівника
+        public void RemoveEmployee(Employee employee)
+        {
+            // Логіка для видалення працівника
+        }
 
-        // Наприклад:
-        // public void AddEmployee(Employee employee) { ... }
-        // public void RemoveEmployee(Employee employee) { ... }
-        // public void AddService(Service service) { ... }
-        // public void GenerateDailyReport(DateTime date) { ... }
-        // і т.д.
+        // Метод для додавання нової послуги
+        public void AddService(Service service)
+        {
+            // Логіка для додавання нової послуги
+        }
+
+        // Метод для генерації щоденного звіту
+        public void GenerateDailyReport(DateTime date)
+        {
+            // Логіка для генерації щоденного звіту
+        }
+
+        // Метод для розрахунку щоденної зарплати для працівника
+        public void CalculateDailySalary(Employee employee)
+        {
+            // Логіка для розрахунку щоденної зарплати працівника
+            // Наприклад, можна використовувати інформацію з ServiceRecords для розрахунку зарплати працівника за певний день
+        }
+
+        // Можливо, інші методи для реалізації функціональних вимог
+        // ...
     }
 }

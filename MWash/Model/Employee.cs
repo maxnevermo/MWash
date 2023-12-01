@@ -19,7 +19,7 @@ namespace MWash
             LastName = lastName;
             FirstName = firstName;
             PhoneNumber = phoneNumber;
-
+            Id = id;
         }
     }
 }
