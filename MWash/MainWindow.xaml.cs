@@ -29,7 +29,7 @@ namespace MWash
 
         private void exitSalaryButton_Click(object sender, RoutedEventArgs e)
         {
-            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
             Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
             Salary.IsHitTestVisible = true;
@@ -97,7 +97,7 @@ namespace MWash
             AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
             AddEmployee.IsHitTestVisible = false;
-
+        }
         private void PopulateServiceDataGrid()
         {
             // Захардкоджена інформація для відображення в таблиці
@@ -126,13 +126,5 @@ namespace MWash
             ServiceDataGrid.ItemsSource = serviceDataList;
         }
 
-
-        private void exitSalaryButton_Click(object sender, RoutedEventArgs e)
-        {
-            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
-            Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
-
-            Salary.IsHitTestVisible = false;
-        }
     }
 }
