@@ -19,11 +19,11 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <StackPanel>
+        <StackPanel x:Name="ServiceListPanel">
             <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
       Grid.Row="6"
               Height="525"
-      x:Name="ProductDataGrid">
+      x:Name="ServiceDataGrid">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="300"/>
 
