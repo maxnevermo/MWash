@@ -134,32 +134,51 @@ namespace MWash
 
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
-            // Отримання даних, введених користувачем у вікні "Add service window"
-            string serviceName = ServiceNameTextBox.Text; // Припустимо, що ви маєте текстове поле для введення назви послуги
-            double serviceCost = Convert.ToDouble(ServiceCostTextBox.Text); // Припустимо, що ви маєте текстове поле для введення вартості послуги
-            string employeeName = EmployeeNameTextBox.Text; // Ім'я працівника
-            string employeeLastName = EmployeeLastNameTextBox.Text; // Прізвище працівника
-            string employeePhone = EmployeePhoneTextBox.Text; // Номер телефону працівника
+            string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
+            string employeeFirstName = EmployeeNameTextBox.Text; // Отримання введеного користувачем імені працівника
+            string employeeLastName = EmployeeLastNameTextBox.Text; // Отримання введеного користувачем прізвища працівника
 
-            // Початковий та кінцевий часи надання послуг
-            DateTime startTime = DateTime.Now;
-            DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
+            // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
+            Dictionary<string, int> services = new Dictionary<string, int>
+    {
+        { "Лише кузов", 250 },
+        { "Кузов та салон", 350 },
+        { "Хімчистка", 1800 }
+    };
 
-            // Створення працівника з введеними даними
-            Employee newEmployee = new Employee(employeeLastName, employeeName, employeePhone, 0); // Потрібно буде вказати Id працівника
+            if (services.ContainsKey(selectedService))
+            {
+                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-            // Створення нової послуги
-            Service newService = new Service(serviceName, (int)serviceCost);
+                // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
+                // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
 
-            // Створення запису про надання послуги з введеним працівником
-            ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { newEmployee }, newService, startTime, endTime);
+                // Початковий та кінцевий часи надання послуг
+                DateTime startTime = DateTime.Now;
+                DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
 
-            // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
-            accounting.AddServiceRecord(newServiceRecord);
+                // Створення нової послуги
+                Service newService = new Service(selectedService, (int)serviceCost);
 
-            // Оновлення відображення у DataGrid після додавання нового запису
-            PopulateServiceDataGrid();
+                // Створення нового працівника на основі введеного користувачем імені та прізвища
+                Employee newEmployee = new Employee(employeeLastName, employeeFirstName, "", 0); // Потрібно додати інформацію про телефон та ID
+
+                // Створення запису про надання послуги з вибраним працівником
+                ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { newEmployee }, newService, startTime, endTime);
+
+                // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+                accounting.AddServiceRecord(newServiceRecord);
+
+                // Оновлення відображення у DataGrid після додавання нового запису
+                PopulateServiceDataGrid();
+            }
+            else
+            {
+                MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+            }
         }
+
+
 
 
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
