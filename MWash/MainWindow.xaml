@@ -177,8 +177,66 @@
             Click="exitReportButton_Click" 
             Style="{StaticResource NoHoverButtonStyle}"/>
 
-            <Border Background="#fff" Width="300" Height="300" CornerRadius="15">
+            <Border Background="#fff" Width="360" Height="290" CornerRadius="15">
                 <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <ComboBox Grid.Row="0"
+                              Width="300"
+                              Height="60"
+                              Background="#96BBF3"
+                              BorderBrush="#000000"
+                              BorderThickness="2"
+                              FontSize="20"
+                              FontWeight="SemiBold"
+                              VerticalContentAlignment="Center"
+                              HorizontalAlignment="Center">
+                        <ComboBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="20"/>
+                                <Setter Property="Background" Value="#96BBF3"/>
+                            </Style>
+                        </ComboBox.Resources>
+                        <ComboBoxItem Content="за день" IsSelected="True"/>
+                        <ComboBoxItem Content="за тиждень"/>
+                        <ComboBoxItem Content="за обраний проміжок часу"/>
+                    </ComboBox>
+
+                    <Border Grid.Row="1" Width="300" Height="60" Background="#96BBF3" BorderBrush="#000000" BorderThickness="2" CornerRadius="20">
+                        <CheckBox Grid.Row="1"
+                                    Width="300"
+                                    Height="60"
+                                    Content="Створити файл звіту"
+                                    Background="#96BBF3"
+                                    FontSize="20"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Left"
+                                    Margin="10,0,0,0"
+                                  FontWeight="DemiBold">
+                        </CheckBox>
+                    </Border>
+
+                    <Button Grid.Row="2"
+                                        Width="200"
+                                        Height="45"
+                                        VerticalAlignment="Top"
+                                        Content="Сформувати"
+                                        FontSize="25"
+                                        FontWeight="DemiBold"
+                                        Background="#96BBF3"
+                                        BorderBrush="#000000"
+                                        BorderThickness="2">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </Grid>
             </Border>
         </Grid>
