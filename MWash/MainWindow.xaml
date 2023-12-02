@@ -281,8 +281,109 @@
                                 Click="exitAddEmployeeButton_Click" 
                                 Style="{StaticResource NoHoverButtonStyle}"/>
 
-                        <Border Background="#fff" Width="300" Height="300" CornerRadius="15">
+                        <Border Background="#fff" Width="570" Height="615" CornerRadius="15">
                             <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Width="415"
+                                           Height="60"
+                                           Text="Surname"
+                                           FontSize="25"
+                                           Margin="35,25,0,0">
+                                </TextBlock>
+
+                                <TextBox Grid.Row="0"
+                                         Width="415"
+                                         Height="60"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         VerticalContentAlignment="Center"
+                                         FontSize="25"
+                                         BorderBrush="#000000"
+                                         BorderThickness="2">
+                                    <TextBox.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="20"/>
+                                        </Style>
+                                    </TextBox.Resources>
+                                </TextBox>
+
+
+                                <TextBlock Grid.Row="1"
+                                           Width="415"
+                                           Height="60"
+                                           Text="Name"
+                                           FontSize="25"
+                                           VerticalAlignment="Top"
+                                           Margin="35,25,0,0">
+                                </TextBlock>
+                                <TextBox Grid.Row="1"
+                                         Width="415"
+                                         Height="60"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Margin="0,25,0,0"
+                                         VerticalContentAlignment="Center"
+                                         FontSize="25"
+                                         BorderBrush="#000000"
+                                         BorderThickness="2">
+                                    <TextBox.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="20"/>
+                                        </Style>
+                                    </TextBox.Resources>
+                                </TextBox>
+
+                                <TextBlock Grid.Row="2"
+                                           Width="415"
+                                           Height="60"
+                                           Text="Phone number"
+                                           FontSize="25"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Margin="35,0,0,0">
+                                    
+                                </TextBlock>
+                                <TextBox Grid.Row="2"
+                                         Width="415"
+                                         Height="60"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Top"
+                                         Margin="0,30,0,0"
+                                         VerticalContentAlignment="Center"
+                                         FontSize="25"
+                                         BorderBrush="#000000"
+                                         BorderThickness="2">
+                                    <TextBox.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="20"/>
+                                        </Style>
+                                    </TextBox.Resources>
+                                </TextBox>
+
+                                <Button Grid.Row="3"
+                                        Width="415"
+                                        Height="60"
+                                        VerticalAlignment="Top"
+                                        Content="Додати працівника"
+                                        FontSize="25"
+                                        FontWeight="DemiBold"
+                                        Background="#96BBF3"
+                                        BorderBrush="#000000"
+                                        BorderThickness="2">
+                                    <Button.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="20"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
                             </Grid>
                         </Border>
                     </Grid>
