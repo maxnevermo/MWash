@@ -132,6 +132,36 @@ namespace MWash
             Service.IsHitTestVisible = true;
         }
 
+        private void addServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Отримання даних, введених користувачем у вікні "Add service window"
+            string serviceName = ServiceNameTextBox.Text; // Припустимо, що ви маєте текстове поле для введення назви послуги
+            double serviceCost = Convert.ToDouble(ServiceCostTextBox.Text); // Припустимо, що ви маєте текстове поле для введення вартості послуги
+            string employeeName = EmployeeNameTextBox.Text; // Ім'я працівника
+            string employeeLastName = EmployeeLastNameTextBox.Text; // Прізвище працівника
+            string employeePhone = EmployeePhoneTextBox.Text; // Номер телефону працівника
+
+            // Початковий та кінцевий часи надання послуг
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
+
+            // Створення працівника з введеними даними
+            Employee newEmployee = new Employee(employeeLastName, employeeName, employeePhone, 0); // Потрібно буде вказати Id працівника
+
+            // Створення нової послуги
+            Service newService = new Service(serviceName, (int)serviceCost);
+
+            // Створення запису про надання послуги з введеним працівником
+            ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { newEmployee }, newService, startTime, endTime);
+
+            // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+            accounting.AddServiceRecord(newServiceRecord);
+
+            // Оновлення відображення у DataGrid після додавання нового запису
+            PopulateServiceDataGrid();
+        }
+
+
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));

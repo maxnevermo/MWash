@@ -182,20 +182,42 @@
                 </Grid>
             </Border>
         </Grid>
-        
+
         <!--Add service window-->
         <Grid x:Name="Service" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Button Background="#000000" 
-                    Opacity="0.3" 
-                    Click="exitServiceButton_Click" 
-                    Style="{StaticResource NoHoverButtonStyle}"/>
+            Opacity="0.3" 
+            Click="exitServiceButton_Click" 
+            Style="{StaticResource NoHoverButtonStyle}"/>
 
-            <Border Background="#fff" Width="300" Height="300" CornerRadius="15">
-                <Grid>
+            <Border Background="#fff" Width="300" Height="400" CornerRadius="15">
+                <Grid Margin="20">
+                    <TextBlock Text="Add New Service" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Margin="0 0 0 20"/>
+
+                    <StackPanel>
+                        <TextBlock Text="Service Name:"/>
+                        <TextBox x:Name="ServiceNameTextBox" Width="200" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="Service Cost:"/>
+                        <TextBox x:Name="ServiceCostTextBox" Width="200" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="Employee Name:"/>
+                        <TextBox x:Name="EmployeeNameTextBox" Width="200" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="Employee Last Name:"/>
+                        <TextBox x:Name="EmployeeLastNameTextBox" Width="200" Margin="0 0 0 10"/>
+
+                        <TextBlock Text="Phone Number:"/>
+                        <TextBox x:Name="EmployeePhoneTextBox" Width="200" Margin="0 0 0 10"/>
+
+                        <Button Content="Add Service" Width="100" HorizontalAlignment="Center" Click="addServiceButton_Click" Margin="0 20 0 0"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
-        
+
+
+
         <!--Employee window-->
         <Grid x:Name="Employees" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Border Background="#fff">
