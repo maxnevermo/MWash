@@ -144,9 +144,33 @@ namespace MWash
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
             Employees.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+            PopulateEmployeesDataGrid();
 
             Employees.IsHitTestVisible = true;
         }
+
+        private void PopulateEmployeesDataGrid()
+        {
+            // Отримання списку всіх працівників з об'єкту MWashAccounting
+            var employees = accounting.GetEmployees();
+
+            // Створення анонімного об'єкту для відображення даних про працівників у DataGrid
+            var employeesDataList = employees.Select(emp => new
+            {
+                Surname = emp.LastName,
+                Name = emp.FirstName,
+                Phone = emp.PhoneNumber,
+                Id = emp.Id
+            }).ToList();
+
+            // Очищення EmployeesDataGrid перед оновленням даних
+            EmployeesDataGrid.ItemsSource = null;
+
+            // Додавання оновлених даних до EmployeesDataGrid
+            EmployeesDataGrid.ItemsSource = employeesDataList;
+        }
+
+
 
         private void exitEmployeesButton_Click(object sender, RoutedEventArgs e)
         {

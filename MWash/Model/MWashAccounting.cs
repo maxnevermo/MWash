@@ -105,8 +105,6 @@ namespace MWash
             return employeeDailySalary;
         }
 
-
-
         public List<(string Employee, string Service, int Price, DateTime Time)> GetServiceDataForGrid(DateTime date)
         {
             var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
@@ -122,8 +120,6 @@ namespace MWash
 
             return serviceDataForGrid;
         }
-
-
 
         // ...
         public List<Employee> GetEmployees()

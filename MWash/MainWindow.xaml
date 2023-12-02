@@ -246,7 +246,7 @@
                                     Height="525"
                                     x:Name="EmployeesDataGrid">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="150"/>
+                                <DataGridTextColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="150" />
 
 
                                 <DataGridTextColumn Header="Surname" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Surname}"/>
