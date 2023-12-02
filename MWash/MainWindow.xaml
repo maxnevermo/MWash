@@ -10,8 +10,31 @@
         Title="MWash" Height="775" Width="1100">
 
     <Window.Resources>
-        
-        
+        <Style x:Key="addEmployeeTextBox" TargetType="TextBox">
+            <Setter Property="Width" Value="405"/>
+            <Setter Property="Height" Value="55"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0 25 0 0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="BorderBrush" Value="#000"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
+                            <StackPanel>
+                                <ScrollViewer Margin="10 10 60 0" x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                <Button Click="addEmployeeButton_Click" Style="{StaticResource NoHoverButtonStyle}" Margin="360 -34 0 0" Height="45" Width="40">
+                                    <TextBlock Text="+" FontSize="50" Margin="0 -21 0 0"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     
     <Grid>
@@ -33,30 +56,41 @@
                     <DataGridTextColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" Binding="{Binding Number}"/>
 
 
-                    <DataGridTextColumn Header="Employee" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Employee}"/>
-                    <DataGridTextColumn Header="Service" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Service}"/>
-                    <DataGridTextColumn Header="Price" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Header="Працівник/-и" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Employee}"/>
+                    <DataGridTextColumn Header="Послуга" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Service}"/>
+                    <DataGridTextColumn Header="Ціна" CanUserResize="False" IsReadOnly="True" Width="100" Binding="{Binding Price}"/>
 
-                    <DataGridTextColumn Header="Time" CanUserResize="False" IsReadOnly="True" Width="*">
+                    <DataGridTextColumn Header="Дата виконання" CanUserResize="False" IsReadOnly="True" Width="200">
                         <DataGridTextColumn.Binding>
                             <Binding Path="Time"  StringFormat="dd MMMM , yyyy"/>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>                    
 
-                    <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="*">
+                    <DataGridTemplateColumn Header="" CanUserResize="False" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button  Style="{DynamicResource closeButtonStyle}"  
-                             Width="20"
-                             Height="20"
-                             BorderBrush="#FFE94D4D"                           
-                             Background="Transparent"
-                             BorderThickness="3"                           
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Center"
-                             Margin="5 0 0 0">
+                                    <Button Style="{DynamicResource closeButtonStyle}"  
+                                            Width="20"
+                                            Height="20"
+                                            BorderBrush="#333"                           
+                                            Background="Transparent"
+                                            BorderThickness="3"                           
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="5 0 0 0">
                                     </Button>
+                                    <Button  Style="{DynamicResource closeButtonStyle}"  
+                                             Width="20"
+                                             Height="20"
+                                             BorderBrush="#FFE94D4D"                           
+                                             Background="Transparent"
+                                             BorderThickness="3"                           
+                                             HorizontalAlignment="Right"
+                                             VerticalAlignment="Center"
+                                             Margin="5 0 0 0">
+                                    </Button>
+                                    
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -145,7 +179,6 @@
           </Button>
         </Grid>
       
-        <!--тут міняєш опасіті на 1 шоб бачити шо редачиш а потмі назад на 0 перед запуском проги. відкривається на кнопку зарплата я вже підключила-->
         <!--Salary window-->
         <Grid x:Name="Salary" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Button Background="#000000" 
@@ -159,11 +192,11 @@
                                 BorderBrush="#000"
                                 BorderThickness="1.5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Surname" Width="*" Binding="{Binding Surname}">
+                            <DataGridTextColumn Header="Ім’я" Width="*" Binding="{Binding Name}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}">
+                            <DataGridTextColumn Header="Прізвище" Width="*" Binding="{Binding Surname}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Salary" Width="*" Binding="{Binding Salary}">
+                            <DataGridTextColumn Header="Зарплата" Width="*" Binding="{Binding Salary}">
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -258,6 +291,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Add New Service" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Height="50" Margin="0 0 0 0" Grid.Row="0"/>
@@ -276,76 +310,54 @@
                         </ComboBox>
 
 
-                        <TextBlock Text="Employee Name:" Width="415"
+                    <TextBlock Text="Employee name &amp; surname:" Width="415"
                                    Height="60"
                                    FontSize="25"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Top"
                                     Margin="35,0,0,0" Grid.Row="2"/>
-                        <TextBox x:Name="EmployeeNameTextBox"         
-                                 Width="415"
-                                Height="60"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="0,25,0,0"
-                                VerticalContentAlignment="Center"
-                                FontSize="25"
-                                BorderBrush="#000000"
-                                BorderThickness="2" Grid.Row="2">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="20"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
+                    <TextBox x:Name="EmployeeNameTextBox"
+                                 Style="{StaticResource addEmployeeTextBox}"
+                                Grid.Row="2">
+                    </TextBox>
+                    <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
+                              Grid.Row="3"
+                              HeadersVisibility="None"
+                              Margin="30 0 30 0"
+                              BorderBrush="#000"
+                              BorderThickness="1.5"
+                              Height="80"
+                              x:Name="currentEmployeesDataGrid">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding FirstName}"/>
+                            <DataGridTextColumn Header="Surname" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding LastName}"/>
+                            <DataGridTemplateColumn Header="" CanUserResize="False" IsReadOnly="True" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{DynamicResource closeButtonStyle}"  
+                                                    Width="20"
+                                                    Height="20"
+                                                    BorderBrush="#333"                           
+                                                    Background="Transparent"
+                                                    BorderThickness="3"                           
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    Margin="5 0 0 0"
+                                                    Click="deleteEmployeeButton_Click"
+                                                    Tag="{Binding}">
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                        
 
-                        <TextBlock Text="Employee Last Name:" Width="415"
-                                   Height="60"
-                                   FontSize="25"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"
-                                    Margin="35,0,0,0" Grid.Row="3"/>
-                        <TextBox x:Name="EmployeeLastNameTextBox"         
-                                 Width="415"
-                                Height="60"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="0,25,0,0"
-                                VerticalContentAlignment="Center"
-                                FontSize="25"
-                                BorderBrush="#000000"
-                                BorderThickness="2" Grid.Row="3">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="20"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-
-                        <TextBlock Text="Phone Number:" Width="415"
-                                   Height="60"
-                                   FontSize="25"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Top"
-                                    Margin="35,0,0,0" Grid.Row="4"/>
-                        <TextBox x:Name="EmployeePhoneTextBox"          
-                                 Width="415"
-                                Height="60"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="0,25,0,0"
-                                VerticalContentAlignment="Center"
-                                FontSize="25"
-                                BorderBrush="#000000"
-                                BorderThickness="2" Grid.Row="4">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="20"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-
-                        <Button Content="Add Service"  HorizontalAlignment="Center" Click="addServiceButton_Click" Margin="0 20 0 0" Grid.Row="5"
+                        <Button Content="Додати послугу"  HorizontalAlignment="Center" Click="addServiceButton_Click" 
+                                        Margin="0 20 0 0" 
+                                        Grid.Row="6"
                                         Width="415"
                                         Height="60"
                                         VerticalAlignment="Top"

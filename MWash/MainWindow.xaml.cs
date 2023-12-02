@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media.Animation;
 
 namespace MWash
@@ -9,6 +16,8 @@ namespace MWash
     public partial class MainWindow : Window
     {
         private MWashAccounting accounting; // Додайте це поле
+        //for managing at one service table
+        ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
 
         public MainWindow()
         {
@@ -105,7 +114,7 @@ namespace MWash
             Salary.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
             Salary.IsHitTestVisible = false;
-                        
+
         }
 
         private void openReportButton_Click(object sender, RoutedEventArgs e)
@@ -130,21 +139,100 @@ namespace MWash
             Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
             Service.IsHitTestVisible = true;
+            EmployeeNameTextBox.Text = "";
+            employessAtOneService.Clear();
+            currentEmployeesDataGrid.ItemsSource = null;
+        }
+        private void addEmployeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get string from input
+            string surname_name_of_employee = EmployeeNameTextBox.Text.Trim(); // Trim to remove leading and trailing spaces
+
+
+            if (!string.IsNullOrEmpty(surname_name_of_employee))
+            {
+                // Divide for name and lastname
+                // We assume that always the first part is the surname and the rest is the name
+                string[] nameParts = Regex.Split(surname_name_of_employee, @"\s+");
+                //check if two words are entered
+                if (nameParts.Length == 2 ) {
+                    string name = nameParts[0];
+                    string surname = nameParts[1];
+
+
+
+                    // Add employees to the employee at one service table
+                    Employee newEmployee = new Employee(surname, name, "", 0);
+
+                    employessAtOneService.Add(newEmployee);
+
+                    EmployeeNameTextBox.Text = "";
+
+                    currentEmployeesDataGrid.ItemsSource = employessAtOneService;
+                }
+                else
+                {
+                    MessageBox.Show("Enter exactly two words (surname and name)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Enter employee surname and name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        async private void deleteEmployeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Employee itemToDelete = (sender as Button).Tag as Employee;
+
+            if (itemToDelete != null)
+            {
+                //get row to delete
+                DataGridRow row = currentEmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
+
+                if (row != null)
+                {
+                    //animation for delete
+                    var storyboard = new Storyboard();
+
+                    var opacityAnimation = new DoubleAnimation
+                    {
+                        To = 0,
+                        Duration = TimeSpan.FromSeconds(0.3),
+                    };
+
+                    Storyboard.SetTarget(opacityAnimation, row);
+                    Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                    storyboard.Children.Add(opacityAnimation);
+
+                    storyboard.Begin();
+
+                    await Task.Delay(300);
+
+                    //delete elemenet
+
+                    employessAtOneService.Remove(itemToDelete);
+
+                    //refresh table
+                    CollectionViewSource.GetDefaultView(currentEmployeesDataGrid.ItemsSource).Refresh();
+
+                }
+            }
+
         }
 
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
             string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
-            string employeeFirstName = EmployeeNameTextBox.Text; // Отримання введеного користувачем імені працівника
-            string employeeLastName = EmployeeLastNameTextBox.Text; // Отримання введеного користувачем прізвища працівника
 
             // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
             Dictionary<string, int> services = new Dictionary<string, int>
-    {
-        { "Лише кузов", 250 },
-        { "Кузов та салон", 350 },
-        { "Хімчистка", 1800 }
-    };
+                {
+                    { "Лише кузов", 250 },
+                    { "Кузов та салон", 350 },
+                    { "Хімчистка", 1800 }
+                };
 
             if (services.ContainsKey(selectedService))
             {
@@ -160,17 +248,34 @@ namespace MWash
                 // Створення нової послуги
                 Service newService = new Service(selectedService, (int)serviceCost);
 
-                // Створення нового працівника на основі введеного користувачем імені та прізвища
-                Employee newEmployee = new Employee(employeeLastName, employeeFirstName, "", 0); // Потрібно додати інформацію про телефон та ID
+                //check if employees were entered
+                if(employessAtOneService.Count > 0)
+                {
+                    //create list with all employees that were added to atOneService table
 
-                // Створення запису про надання послуги з вибраним працівником
-                ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { newEmployee }, newService, startTime, endTime);
+                    List<Employee> allEmplyees = new List<Employee>();
 
-                // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
-                accounting.AddServiceRecord(newServiceRecord);
+                    foreach (var employee in employessAtOneService)
+                    {
+                        allEmplyees.Add(employee);
+                    }
+                    // Створення запису про надання послуги з вибраним працівником
+                    ServiceRecord newServiceRecord = new ServiceRecord(allEmplyees, newService, startTime, endTime);
 
-                // Оновлення відображення у DataGrid після додавання нового запису
-                PopulateServiceDataGrid();
+                    // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+                    accounting.AddServiceRecord(newServiceRecord);
+
+                    // Оновлення відображення у DataGrid після додавання нового запису
+                    PopulateServiceDataGrid();
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                    Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                    Service.IsHitTestVisible = false;
+                }
+                else
+                {
+                    MessageBox.Show("Не введено жодного працівника", "Помилка");
+                }
             }
             else
             {
