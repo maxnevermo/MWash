@@ -110,14 +110,10 @@ namespace MWash
         }
         private void addEmployeeButton_Click(object sender, RoutedEventArgs e)
         {
-            // Get string from input
-            string surname_name_of_employee = EmployeeNameTextBox.Text.Trim(); // Trim to remove leading and trailing spaces
-
+            string surname_name_of_employee = EmployeeNameTextBox.Text.Trim();
 
             if (!string.IsNullOrEmpty(surname_name_of_employee))
             {
-                // Divide for name and lastname
-                // We assume that always the first part is the surname and the rest is the name
                 string[] nameParts = Regex.Split(surname_name_of_employee, @"\s+");
                 //check if two words are entered
                 if (nameParts.Length == 2 ) {
@@ -144,18 +140,20 @@ namespace MWash
                     {
                         MessageBox.Show("Current employee doesn’t exists. Add it to the data first", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
+                    currentEmployeesDataGrid.ItemsSource = null; // Clear the ItemsSource
+                    currentEmployeesDataGrid.ItemsSource = employessAtOneService; // Reassign the ItemsSource
                 }
                 else
                 {
                     MessageBox.Show("Enter exactly two words (surname and name)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
             }
             else
             {
                 MessageBox.Show("Enter employee surname and name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         async private void deleteEmployeeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -217,14 +215,21 @@ namespace MWash
                 // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
 
                 // Початковий та кінцевий часи надання послуг
-                DateTime startTime = DateTime.Now;
-                DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
+                //DateTime startTime = DateTime.Now;
+                //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
 
                 // Створення нової послуги
                 Service newService = new Service(selectedService, (int)serviceCost);
 
+                // Отримання вибраного часу (години та хвилини)
+                int selectedHour = int.Parse(((ComboBoxItem)HourComboBox.SelectedItem).Content.ToString());
+                int selectedMinute = int.Parse(((ComboBoxItem)MinuteComboBox.SelectedItem).Content.ToString());
+
+                DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
+                DateTime endTime = startTime.AddMinutes(30);
+
                 //check if employees were entered
-                if(employessAtOneService.Count > 0)
+                if (employessAtOneService.Count > 0)
                 {
                     //create list with all employees that were added to atOneService table
 
