@@ -309,19 +309,57 @@
                             <ComboBoxItem Content="Хімчистка"/>
                         </ComboBox>
 
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="35,0,0,0" Height="40">
+                        <ComboBox x:Name="HourComboBox" Width="80">
+                            <ComboBoxItem Content="00"/>
+                            <ComboBoxItem Content="01"/>
+                            <ComboBoxItem Content="02"/>
+                            <ComboBoxItem Content="03"/>
+                            <ComboBoxItem Content="04"/>
+                            <ComboBoxItem Content="05"/>
+                            <ComboBoxItem Content="06"/>
+                            <ComboBoxItem Content="07"/>
+                            <ComboBoxItem Content="08"/>
+                            <ComboBoxItem Content="09"/>
+                            <ComboBoxItem Content="10"/>
+                            <ComboBoxItem Content="11"/>
+                            <ComboBoxItem Content="12"/>
+                            <ComboBoxItem Content="13"/>
+                            <ComboBoxItem Content="14"/>
+                            <ComboBoxItem Content="15"/>
+                            <ComboBoxItem Content="16"/>
+                            <ComboBoxItem Content="17"/>
+                            <ComboBoxItem Content="18"/>
+                            <ComboBoxItem Content="19"/>
+                            <ComboBoxItem Content="20"/>
+                            <ComboBoxItem Content="21"/>
+                            <ComboBoxItem Content="22"/>
+                            <ComboBoxItem Content="23"/>
+                        </ComboBox>
+                        <TextBlock Text=" : " FontSize="25"/>
+                        <ComboBox x:Name="MinuteComboBox" Width="80">
+                            <ComboBoxItem Content="00"/>
+                            <ComboBoxItem Content="15"/>
+                            <ComboBoxItem Content="30"/>
+                            <ComboBoxItem Content="45"/>
+                        </ComboBox>
+                    </StackPanel>
 
                     <TextBlock Text="Employee name &amp; surname:" Width="415"
                                    Height="60"
                                    FontSize="25"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Top"
-                                    Margin="35,0,0,0" Grid.Row="2"/>
+                                    Margin="35,0,0,0" Grid.Row="3"/>
                     <TextBox x:Name="EmployeeNameTextBox"
                                  Style="{StaticResource addEmployeeTextBox}"
-                                Grid.Row="2">
-                    </TextBox>
+                                Grid.Row="3">
+                    </TextBox>                 
+
+
+
                     <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}"
-                              Grid.Row="3"
+                              Grid.Row="4"
                               HeadersVisibility="None"
                               Margin="30 0 30 0"
                               BorderBrush="#000"
