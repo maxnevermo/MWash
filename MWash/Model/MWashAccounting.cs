@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MWash
 {
@@ -35,7 +36,7 @@ namespace MWash
             }
             else
             {
-                Console.WriteLine("All service boxes are currently occupied. Cannot add new service record.");
+                MessageBox.Show("Усі службові бокси в даний момент зайняті. Неможливо додати новий запис про послугу.", "Помилка");
             }
         }
 
@@ -123,6 +124,5 @@ namespace MWash
 
             return serviceDataForGrid;
         }
-
     }
 }

@@ -357,7 +357,30 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <TextBlock Text="Employee surname &amp; name:" Width="415"
+                    <!-- Зміни у ComboBox для виведення прізвища та імені працівника -->
+                    <ComboBox x:Name="EmployeeComboBox" 
+                  Grid.Row="3"
+                  Padding="15 0 0 0" 
+                  FontSize="20" 
+                  Width="405" 
+                  Height="40"
+                  Margin="0 30 0 0"
+                  VerticalContentAlignment="Center"
+                  DisplayMemberPath="FullName" 
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding SelectedEmployeeId, Mode=TwoWay}"/>
+
+
+                    <!-- Поля для ідентифікації обраних працівників (додайте поле для виводу повного імені обраного працівника) -->
+                        <TextBox x:Name="SelectedEmployeeNameTextBox" 
+         Style="{StaticResource addEmployeeTextBox}"
+         Grid.Row="3"
+         Visibility="Collapsed"
+                            Text="{Binding SelectedEmployeeFullName}"/>
+                            <!-- Зв'яжіть з властивістю вибраного повного імені -->
+
+
+                            <!--TextBlock Text="Employee surname &amp; name:" Width="415"
                                    Height="60"
                                    FontSize="25"
                                    HorizontalAlignment="Center"
@@ -366,7 +389,7 @@
                     <TextBox x:Name="EmployeeNameTextBox"
                                  Style="{StaticResource addEmployeeTextBox}"
                                 Grid.Row="3">
-                    </TextBox>                 
+                    </TextBox-->                 
 
 
 

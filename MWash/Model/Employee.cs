@@ -13,6 +13,11 @@ namespace MWash
         public string PhoneNumber { get; set; }
         public int Id { get; set; }
 
+        public string FullName
+        {
+            get { return $"{FirstName} {LastName}"; }
+        }
+
         // Конструктор класу Employee
         public Employee(string lastName, string firstName, string phoneNumber, int id)
         {
@@ -23,3 +28,4 @@ namespace MWash
         }
     }
 }
+
