@@ -229,7 +229,9 @@
                               FontSize="20"
                               FontWeight="SemiBold"
                               VerticalContentAlignment="Center"
-                              HorizontalAlignment="Center">
+                              HorizontalAlignment="Center"
+                              Style="{DynamicResource ComboBoxStyle}" 
+                              ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}">
                         <ComboBox.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="20"/>
@@ -303,14 +305,24 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top"
                                     Margin="35,0,0,0" Grid.Row="1"/>
-                    <ComboBox x:Name="ServiceComboBox" Width="200" Height="30" Grid.Row="1">
+                    <ComboBox x:Name="ServiceComboBox" 
+                              Grid.Row="1"
+                              Style="{DynamicResource ComboBoxStyle}" 
+                              ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
+                              Padding="15 0 0 0" 
+                              FontSize="20" 
+                              Width="405" 
+                              Height="40" 
+                              Margin="0 30 0 0"
+                              VerticalContentAlignment="Center">
+                        
                             <ComboBoxItem Content="Лише кузов"/>
                             <ComboBoxItem Content="Кузов та салон"/>
                             <ComboBoxItem Content="Хімчистка"/>
                         </ComboBox>
 
 
-                    <TextBlock Text="Employee name &amp; surname:" Width="415"
+                    <TextBlock Text="Employee surname &amp; name:" Width="415"
                                    Height="60"
                                    FontSize="25"
                                    HorizontalAlignment="Center"
@@ -428,12 +440,12 @@
                                     Height="525"
                                     x:Name="EmployeesDataGrid">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="150" />
+                                <DataGridTextColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="150" Binding="{Binding Id}" />
 
 
-                                <DataGridTextColumn Header="Surname" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Surname}"/>
-                                <DataGridTextColumn Header="Name" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Phone number" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding Phone}"/>
+                                <DataGridTextColumn Header="Surname" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding LastName}"/>
+                                <DataGridTextColumn Header="Name" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding FirstName}"/>
+                                <DataGridTextColumn Header="Phone number" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding PhoneNumber}"/>
 
                                 <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="*">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -447,7 +459,9 @@
                                                            BorderThickness="3"                           
                                                            HorizontalAlignment="Right"
                                                            VerticalAlignment="Center"
-                                                           Margin="5 0 0 0">
+                                                           Margin="5 0 0 0"
+                                                           Click="DeleteEmployeeFromTableButton_Click"
+                                                           Tag="{Binding}">
                                                 </Button>
                                             </StackPanel>
                                         </DataTemplate>
@@ -489,7 +503,8 @@
                                          VerticalContentAlignment="Center"
                                          FontSize="25"
                                          BorderBrush="#000000"
-                                         BorderThickness="2">
+                                         BorderThickness="2"
+                                         x:Name="Surname">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="20"/>
@@ -515,7 +530,8 @@
                                          VerticalContentAlignment="Center"
                                          FontSize="25"
                                          BorderBrush="#000000"
-                                         BorderThickness="2">
+                                         BorderThickness="2"
+                                         x:Name="Name">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="20"/>
@@ -542,7 +558,8 @@
                                          VerticalContentAlignment="Center"
                                          FontSize="25"
                                          BorderBrush="#000000"
-                                         BorderThickness="2">
+                                         BorderThickness="2"
+                                         x:Name="Phone">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="20"/>
@@ -559,7 +576,8 @@
                                         FontWeight="DemiBold"
                                         Background="#96BBF3"
                                         BorderBrush="#000000"
-                                        BorderThickness="2">
+                                        BorderThickness="2"
+                                        Click="AddEmployeeToTableButton_Click">
                                     <Button.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="20"/>
