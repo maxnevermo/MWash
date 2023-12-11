@@ -11,15 +11,18 @@ namespace MWash
     public class MWashAccounting
     {
         public ObservableCollection<ServiceRecord> ServiceRecords { get; private set; }
+        public List<Employee> EmployeesList { get; private set; }
 
         public MWashAccounting()
         {
             ServiceRecords = new ObservableCollection<ServiceRecord>();
+            EmployeesList = new List<Employee>();   
         }
         
         // Метод для додавання нового запису про надану послугу
         public void AddServiceRecord(ServiceRecord serviceRecord)
         {
+
             // Перевірка наявності вільних боксів перед додаванням нового запису про надану послугу
             var numberOfOccupiedBoxes = ServiceRecords
                 .Count(record => record.StartTime <= serviceRecord.EndTime && record.EndTime >= serviceRecord.StartTime);
@@ -121,18 +124,5 @@ namespace MWash
             return serviceDataForGrid;
         }
 
-        // ...
-        public List<Employee> GetEmployees()
-        {
-            List<Employee> allEmployees = new List<Employee>();
-
-            foreach (var record in ServiceRecords)
-            {
-                allEmployees.AddRange(record.Employees);
-            }
-
-            // Повертаємо унікальних працівників, видаливши дублікати за ID
-            return allEmployees.GroupBy(emp => emp.Id).Select(group => group.First()).ToList();
-        }
     }
 }

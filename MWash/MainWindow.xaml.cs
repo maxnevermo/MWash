@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MWash.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -9,69 +10,32 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace MWash
 {
     public partial class MainWindow : Window
     {
-        private MWashAccounting accounting; // Додайте це поле
-        //for managing at one service table
-        ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
+            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле
+            //for managing at one service table
+            ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
+            UserRepository userRepository = new UserRepository();
 
-        public MainWindow()
-        {
-            InitializeComponent();
-            accounting = new MWashAccounting(); // Ініціалізуйте об'єкт MWashAccounting
+            public MainWindow()
+            {
+                InitializeComponent();
+                List<Employee> allUsers = userRepository.GetUsers();
 
-            List<Employee> employees1 = new List<Employee>
-    {
-        new Employee("Doe", "John", "123456789", 1),
-        new Employee("Smith", "Jane", "987654321", 2)
-    };
-
-            List<Employee> employees2 = new List<Employee>
-    {
-        new Employee("Brown", "Mike", "111111111", 3)
-    };
-
-            List<Employee> employees3 = new List<Employee>
-    {
-        new Employee("Garcia", "Carlos", "333333333", 5),
-        new Employee("Chen", "Ling", "444444444", 6)
-    };
-
-            // Створення послуг
-            Service service1 = new Service("Car Wash", 250); // Перша послуга
-            Service service2 = new Service("Interior Detailing", 150); // Друга послуга
-            Service service3 = new Service("Exterior Detailing", 200); // Третя послуга
-
-            // Початковий та кінцевий часи надання послуг
-            DateTime startTime1 = DateTime.Now;
-            DateTime endTime1 = DateTime.Now.AddHours(0.5); // Припустимо, що послуга триває годину
-
-            DateTime startTime2 = DateTime.Now.AddHours(0.5);
-            DateTime endTime2 = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
-
-            DateTime startTime3 = DateTime.Now.AddHours(1);
-            DateTime endTime3 = DateTime.Now.AddHours(1.5); // Припустимо, що послуга триває годину
-
-            // Створення записів про надання послуг
-            ServiceRecord serviceRecord1 = new ServiceRecord(employees1, service1, startTime1, endTime1);
-            ServiceRecord serviceRecord2 = new ServiceRecord(employees2, service2, startTime2, endTime2);
-            ServiceRecord serviceRecord3 = new ServiceRecord(employees3, service3, startTime3, endTime3);
-
-            // Додавання нових записів до ServiceRecords через об'єкт MWashAccounting (accounting)
-            accounting.AddServiceRecord(serviceRecord1);
-            accounting.AddServiceRecord(serviceRecord2);
-            accounting.AddServiceRecord(serviceRecord3);
-
-            // Оновлення відображення у DataGrid після додавання нових записів
-            PopulateServiceDataGrid();
-
-            // ... інші ініціалізації або налаштування інтерфейсу
-        }
-
+                if (allUsers != null )
+                {
+                    foreach (var user in allUsers)
+                    {
+                        accounting.EmployeesList.Add(user);
+                    }
+                }
+                
+            }
 
         private void openSalaryButton_Click(object sender, RoutedEventArgs e)
         {
@@ -88,7 +52,7 @@ namespace MWash
             SalaryDataGrid.ItemsSource = null;
 
             // Отримання даних про зарплату для кожного працівника з об'єкту MWashAccounting
-            var employees = accounting.GetEmployees();
+            var employees = accounting.EmployeesList;
             var salaryDataList = new List<EmployeeSalary>(); // Користувацький клас для зберігання даних про заробітну плату
 
             foreach (var employee in employees)
@@ -138,6 +102,7 @@ namespace MWash
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
             Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
+            ServiceComboBox.Text = string.Empty;
             Service.IsHitTestVisible = true;
             EmployeeNameTextBox.Text = "";
             employessAtOneService.Clear();
@@ -150,19 +115,31 @@ namespace MWash
             if (!string.IsNullOrEmpty(surname_name_of_employee))
             {
                 string[] nameParts = Regex.Split(surname_name_of_employee, @"\s+");
+                //check if two words are entered
+                if (nameParts.Length == 2 ) {
+                    string name = nameParts[1];
+                    string surname = nameParts[0];
 
-                if (nameParts.Length == 2)
-                {
-                    string name = nameParts[0];
-                    string surname = nameParts[1];
-
-                    // Create a new instance of Employee for each employee
+                    // Add employees to the employee at one service table
                     Employee newEmployee = new Employee(surname, name, "", 0);
 
-                    employessAtOneService.Add(newEmployee);
+                    // Find the matching employee
+                    Employee toFind = accounting.EmployeesList.FirstOrDefault(e => e.LastName == newEmployee.LastName && e.FirstName == newEmployee.FirstName);
 
-                    EmployeeNameTextBox.Text = "";
+                    if (toFind != null)
+                    {
+                        employessAtOneService.Add(toFind);
 
+                        EmployeeNameTextBox.Text = "";
+
+                        currentEmployeesDataGrid.ItemsSource = null;
+                        currentEmployeesDataGrid.ItemsSource = employessAtOneService;
+                    }
+
+                    else
+                    {
+                        MessageBox.Show("Current employee doesn’t exists. Add it to the data first", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     currentEmployeesDataGrid.ItemsSource = null; // Clear the ItemsSource
                     currentEmployeesDataGrid.ItemsSource = employessAtOneService; // Reassign the ItemsSource
                 }
@@ -286,9 +263,6 @@ namespace MWash
             }
         }
 
-
-
-
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
@@ -308,23 +282,12 @@ namespace MWash
 
         private void PopulateEmployeesDataGrid()
         {
-            // Отримання списку всіх працівників з об'єкту MWashAccounting
-            var employees = accounting.GetEmployees();
-
-            // Створення анонімного об'єкту для відображення даних про працівників у DataGrid
-            var employeesDataList = employees.Select(emp => new
-            {
-                Surname = emp.LastName,
-                Name = emp.FirstName,
-                Phone = emp.PhoneNumber,
-                Id = emp.Id
-            }).ToList();
 
             // Очищення EmployeesDataGrid перед оновленням даних
             EmployeesDataGrid.ItemsSource = null;
 
             // Додавання оновлених даних до EmployeesDataGrid
-            EmployeesDataGrid.ItemsSource = employeesDataList;
+            EmployeesDataGrid.ItemsSource = accounting.EmployeesList;
         }
 
 
@@ -338,6 +301,10 @@ namespace MWash
         }
         private void openAddEmployeeButton_Click(object sender, RoutedEventArgs e)
         {
+            Surname.Text = "";
+            Name.Text = "";
+            Phone.Text = "";
+
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
             AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
@@ -371,6 +338,72 @@ namespace MWash
             ServiceDataGrid.ItemsSource = serviceDataList;
         }
 
+        private void AddEmployeeToTableButton_Click(object sender, RoutedEventArgs e)
+        {
+            string surname = Surname.Text;
+            string name = Name.Text;
+            string phone = Phone.Text;
+            int id = accounting.EmployeesList.Count+1;
 
+            Employee employee = new Employee(surname, name, phone, id);
+
+            if(!accounting.EmployeesList.Contains(employee))
+            {
+                accounting.EmployeesList.Add(employee);
+                userRepository.AddUser(employee);
+            }
+            else
+            {
+                MessageBox.Show("Employee already exists", "Duplicate Employee", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            PopulateEmployeesDataGrid();
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            AddEmployee.IsHitTestVisible = false;
+
+        }
+
+        async private void DeleteEmployeeFromTableButton_Click(object sender, RoutedEventArgs e)
+        {
+            Employee itemToDelete = (sender as Button).Tag as Employee;
+
+            if (itemToDelete != null)
+            {
+                //get row to delete
+                DataGridRow row = EmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
+
+                if (row != null)
+                {
+                    int index = accounting.EmployeesList.IndexOf(itemToDelete);
+                    //animation for delete
+                    var storyboard = new Storyboard();
+
+                    var opacityAnimation = new DoubleAnimation
+                    {
+                        To = 0,
+                        Duration = TimeSpan.FromSeconds(0.3),
+                    };
+
+                    Storyboard.SetTarget(opacityAnimation, row);
+                    Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                    storyboard.Children.Add(opacityAnimation);
+
+                    storyboard.Begin();
+
+                    await Task.Delay(300);
+
+                    //delete elemenet
+
+                    accounting.EmployeesList.RemoveAt(index);
+                    userRepository.DeleteUser(itemToDelete);
+
+                    //refresh table
+                    CollectionViewSource.GetDefaultView(EmployeesDataGrid.ItemsSource).Refresh();
+
+                }
+            }
+        }
     }
 }
