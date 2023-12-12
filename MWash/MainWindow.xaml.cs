@@ -17,8 +17,7 @@ namespace MWash
 {
     public partial class MainWindow : Window
     {
-            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле
-            //for managing at one service table
+            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле 
             ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
             UserRepository userRepository = new UserRepository();
 
@@ -196,8 +195,6 @@ namespace MWash
                 {
                     employessAtOneService.Add(selectedEmployee);
 
-                    //EmployeeNameTextBox.Text = "";
-
                     currentEmployeesDataGrid.ItemsSource = null;
                     currentEmployeesDataGrid.ItemsSource = employessAtOneService;
                 }
@@ -211,6 +208,7 @@ namespace MWash
                 MessageBox.Show("Будь ласка, виберіть працівника зі списку.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         async private void deleteEmployeeButton_Click(object sender, RoutedEventArgs e)
@@ -253,7 +251,7 @@ namespace MWash
 
         }
 
-        private void addServiceButton_Click(object sender, RoutedEventArgs e)
+        /*private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
             string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
@@ -307,11 +305,11 @@ namespace MWash
             {
                 MessageBox.Show("Помилка: Вибрана послуга не існує у списку.", "Помилка");
             }
-        }
+        }*/
 
 
 
-        /*private void addServiceButton_Click(object sender, RoutedEventArgs e)
+        private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
             string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
@@ -372,7 +370,7 @@ namespace MWash
             {
                 MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
             }
-        }*/
+        }
 
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
         {
@@ -516,5 +514,58 @@ namespace MWash
                 }
             }
         }
+
+
+        private void GenerateReport(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = ReportComboBox.SelectedItem as ComboBoxItem;
+
+            if (selectedItem != null)
+            {
+                string selectedOption = selectedItem.Content.ToString();
+
+                if (selectedOption == "за день")
+                {
+                    // Отримати поточну дату для формування звіту за день
+                    DateTime currentDate = DateTime.Now;
+                    accounting.GenerateReportForDay(currentDate);
+                }
+                else if (selectedOption == "за тиждень")
+                {
+                    // Отримати дати для формування звіту за тиждень (останній тиждень)
+                    DateTime endDate = DateTime.Now;
+                    DateTime startDate = endDate.AddDays(-7);
+                    accounting.GenerateReportForWeek(startDate);
+
+                    // Якщо користувач вибрав "Створити файл звіту", зберегти звіт у текстовий файл
+                    if (CreateFileCheckBox.IsChecked == true)
+                    {
+                        // Зберегти звіт у текстовий файл
+                        // Вам необхідно додати відповідний код для збереження у файлі звіту за тиждень
+                        // Наприклад:
+                        // accounting.SaveReportToFile("Звіт_за_тиждень.txt", reportContent);
+                    }
+                }
+                else if (selectedOption == "за обраний проміжок часу")
+                {
+                    // Отримати обраний проміжок часу для формування звіту
+                    // DateTime selectedStartDate = ...; // введіть обрану користувачем початкову дату
+                    // DateTime selectedEndDate = ...;   // введіть обрану користувачем кінцеву дату
+                    // Ваш код для формування звіту за обраний проміжок часу
+                    // accounting.GenerateReportForSelectedPeriod(selectedStartDate, selectedEndDate);
+
+                    // Якщо користувач вибрав "Створити файл звіту", додайте код для збереження у текстовий файл
+                    if (CreateFileCheckBox.IsChecked == true)
+                    {
+                        // Зберегти звіт у текстовий файл
+                        // Вам необхідно додати відповідний код для збереження у файлі звіту за обраний проміжок часу
+                    }
+                }
+            }
+        }
+
+
+
+
     }
 }
