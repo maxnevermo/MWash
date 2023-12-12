@@ -88,8 +88,10 @@ namespace MWash
 
         private void FillEmployeeComboBox()
         {
+            EmployeeComboBox.ItemsSource = null;
+            employees.Clear();
             // Отримання списку працівників з об'єкта accounting
-            List<Employee> allUsers = userRepository.GetUsers();
+            List<Employee> allUsers = accounting.EmployeesList;
 
             if (allUsers != null)
             {
@@ -175,10 +177,10 @@ namespace MWash
 
             ServiceComboBox.Text = string.Empty;
             Service.IsHitTestVisible = true;
-            //EmployeeNameTextBox.Text = "";
+            EmployeeComboBox.Text = string.Empty;
             employessAtOneService.Clear();
-            HourComboBox.SelectedIndex = 0;
-            MinuteComboBox.SelectedIndex = 0;
+            HourComboBox.Text = string.Empty;
+            MinuteComboBox.Text = string.Empty;
             currentEmployeesDataGrid.ItemsSource = null;
         }
 
@@ -251,63 +253,6 @@ namespace MWash
             }
 
         }
-
-        /*private void addServiceButton_Click(object sender, RoutedEventArgs e)
-        {
-            string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
-
-            // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
-            Dictionary<string, int> services = new Dictionary<string, int>
-    {
-        { "Лише кузов", 250 },
-        { "Кузов та салон", 350 },
-        { "Хімчистка", 1800 }
-    };
-
-            if (services.ContainsKey(selectedService))
-            {
-                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
-
-                // Отримання вибраного працівника з ComboBox
-                Employee selectedEmployee = EmployeeComboBox.SelectedItem as Employee;
-
-                if (selectedEmployee != null)
-                {
-                    // Створення нової послуги
-                    Service newService = new Service(selectedService, serviceCost);
-
-                    // Отримання вибраного часу (години та хвилини)
-                    int selectedHour = int.Parse(((ComboBoxItem)HourComboBox.SelectedItem).Content.ToString());
-                    int selectedMinute = int.Parse(((ComboBoxItem)MinuteComboBox.SelectedItem).Content.ToString());
-
-                    DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                    DateTime endTime = startTime.AddMinutes(30);
-
-                    // Створення запису про надання послуги з вибраним працівником
-                    ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { selectedEmployee }, newService, startTime, endTime);
-
-                    // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
-                    accounting.AddServiceRecord(newServiceRecord);
-
-                    // Оновлення відображення у DataGrid після додавання нового запису
-                    PopulateServiceDataGrid();
-
-                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
-                    Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
-
-                    Service.IsHitTestVisible = false;
-                }
-                else
-                {
-                    MessageBox.Show("Помилка: Оберіть працівника зі списку.", "Помилка");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Помилка: Вибрана послуга не існує у списку.", "Помилка");
-            }
-        }*/
-
 
 
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
@@ -565,6 +510,8 @@ namespace MWash
 
             AddEmployee.IsHitTestVisible = false;
 
+            FillEmployeeComboBox();
+
         }
 
         async private void DeleteEmployeeFromTableButton_Click(object sender, RoutedEventArgs e)
@@ -604,6 +551,7 @@ namespace MWash
 
                     //refresh table
                     PopulateEmployeesDataGrid();
+                    FillEmployeeComboBox();
 
                 }
             }
