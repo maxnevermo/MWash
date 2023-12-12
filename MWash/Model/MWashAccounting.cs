@@ -10,7 +10,7 @@ namespace MWash
 {
     public class MWashAccounting
     {
-        public ObservableCollection<ServiceRecord> ServiceRecords { get; private set; }
+        public ObservableCollection<ServiceRecord> ServiceRecords { get; set; }
         public List<Employee> EmployeesList { get; private set; }
 
         public MWashAccounting()
@@ -89,7 +89,7 @@ namespace MWash
 
         public double CalculateDailySalary(Employee employee)
         {
-            var employeeRecords = ServiceRecords.Where(record => record.Employees.Any(emp => emp.Id == employee.Id)).ToList();
+            var employeeRecords = ServiceRecords.Where(record => record.Employees.Any(emp => emp.LastName.Trim() == employee.LastName.Trim())).ToList();
             var totalEmployeeIncome = 0;
 
             foreach (var record in employeeRecords)
@@ -97,7 +97,7 @@ namespace MWash
                 var numberOfEmployees = record.Employees.Count; // Отримати кількість працівників, які беруть участь у послузі
                 var employeeShare = record.Service.ServiceCost / numberOfEmployees; // Розподілити вартість послуги між працівниками
 
-                if (record.Employees.Any(emp => emp.Id == employee.Id))
+                if (record.Employees.Any(emp => emp.LastName.Trim() == employee.LastName.Trim()))
                 {
                     totalEmployeeIncome += employeeShare; // Додати до загального доходу працівника його частку вартості послуги
                 }

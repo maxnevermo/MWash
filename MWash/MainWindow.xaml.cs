@@ -1,9 +1,12 @@
 ﻿using MWash.Model;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,11 +24,13 @@ namespace MWash
             //for managing at one service table
             ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
             UserRepository userRepository = new UserRepository();
+            ServiceRepository serviceRepository = new ServiceRepository();
 
             public MainWindow()
             {
                 InitializeComponent();
                 List<Employee> allUsers = userRepository.GetUsers();
+                List<ServiceRecord> allRecords = serviceRepository.GetUsers();
 
                 if (allUsers != null )
                 {
@@ -34,8 +39,44 @@ namespace MWash
                         accounting.EmployeesList.Add(user);
                     }
                 }
-                
-            }
+
+                if(allRecords != null)
+                {
+                    foreach(var record in allRecords)
+                    {
+                        accounting.ServiceRecords.Add(record);
+                    }
+                }
+                PopulateServiceDataGrid();
+
+                for (int i = 0; i < 24; i++)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    if (i < 10)
+                    {
+                        sb.Append("0");
+                    }
+
+                    sb.Append(i);
+
+                    HourComboBox.Items.Add(sb.ToString());
+                }
+                for (int i = 0; i <= 60; i++)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    if (i < 10)
+                    {
+                        sb.Append("0");
+                    }
+
+                    sb.Append(i);
+
+                    MinuteComboBox.Items.Add(sb.ToString());
+                }
+
+        }
 
         private void openSalaryButton_Click(object sender, RoutedEventArgs e)
         {
@@ -99,6 +140,8 @@ namespace MWash
 
         private void openServiceButton_Click(object sender, RoutedEventArgs e)
         {
+            isEditing = false;
+
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
             Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
@@ -106,6 +149,8 @@ namespace MWash
             Service.IsHitTestVisible = true;
             EmployeeNameTextBox.Text = "";
             employessAtOneService.Clear();
+            HourComboBox.SelectedIndex = 0;
+            MinuteComboBox.SelectedIndex = 0;
             currentEmployeesDataGrid.ItemsSource = null;
         }
         private void addEmployeeButton_Click(object sender, RoutedEventArgs e)
@@ -124,7 +169,7 @@ namespace MWash
                     Employee newEmployee = new Employee(surname, name, "", 0);
 
                     // Find the matching employee
-                    Employee toFind = accounting.EmployeesList.FirstOrDefault(e => e.LastName == newEmployee.LastName && e.FirstName == newEmployee.FirstName);
+                    Employee toFind = accounting.EmployeesList.FirstOrDefault(e => e.LastName.Trim() == newEmployee.LastName.Trim() && e.FirstName.Trim() == newEmployee.FirstName.Trim());
 
                     if (toFind != null)
                     {
@@ -187,6 +232,7 @@ namespace MWash
 
                     employessAtOneService.Remove(itemToDelete);
 
+
                     //refresh table
                     CollectionViewSource.GetDefaultView(currentEmployeesDataGrid.ItemsSource).Refresh();
 
@@ -197,70 +243,152 @@ namespace MWash
 
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
-            string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
+            if (!isEditing)
+            {
+                string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
-            // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
-            Dictionary<string, int> services = new Dictionary<string, int>
+                // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
+                Dictionary<string, int> services = new Dictionary<string, int>
                 {
                     { "Лише кузов", 250 },
                     { "Кузов та салон", 350 },
                     { "Хімчистка", 1800 }
                 };
 
-            if (services.ContainsKey(selectedService))
-            {
-                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
-
-                // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
-                // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
-
-                // Початковий та кінцевий часи надання послуг
-                //DateTime startTime = DateTime.Now;
-                //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
-
-                // Створення нової послуги
-                Service newService = new Service(selectedService, (int)serviceCost);
-
-                // Отримання вибраного часу (години та хвилини)
-                int selectedHour = int.Parse(((ComboBoxItem)HourComboBox.SelectedItem).Content.ToString());
-                int selectedMinute = int.Parse(((ComboBoxItem)MinuteComboBox.SelectedItem).Content.ToString());
-
-                DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                DateTime endTime = startTime.AddMinutes(30);
-
-                //check if employees were entered
-                if (employessAtOneService.Count > 0)
+                if (services.ContainsKey(selectedService))
                 {
-                    //create list with all employees that were added to atOneService table
+                    int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-                    List<Employee> allEmplyees = new List<Employee>();
+                    // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
+                    // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
 
-                    foreach (var employee in employessAtOneService)
+                    // Початковий та кінцевий часи надання послуг
+                    //DateTime startTime = DateTime.Now;
+                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
+
+                    // Створення нової послуги
+                    Service newService = new Service(selectedService, (int)serviceCost);
+
+                    // Отримання вибраного часу (години та хвилини)
+                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+
+
+                    DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
+                    DateTime endTime = startTime.AddMinutes(30);
+
+                    //check if employees were entered
+                    if (employessAtOneService.Count > 0)
                     {
-                        allEmplyees.Add(employee);
+                        //create list with all employees that were added to atOneService table
+
+                        List<Employee> allEmplyees = new List<Employee>();
+
+                        foreach (var employee in employessAtOneService)
+                        {
+                            allEmplyees.Add(employee);
+                        }
+                        // Створення запису про надання послуги з вибраним працівником
+                        ServiceRecord newServiceRecord = new ServiceRecord(allEmplyees, newService, startTime, endTime);
+
+                        // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+                        accounting.AddServiceRecord(newServiceRecord);
+
+                        // Оновлення відображення у DataGrid після додавання нового запису
+                        PopulateServiceDataGrid();
+                        serviceRepository.AddUser(newServiceRecord);
+                        DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                        Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                        Service.IsHitTestVisible = false;
+
                     }
-                    // Створення запису про надання послуги з вибраним працівником
-                    ServiceRecord newServiceRecord = new ServiceRecord(allEmplyees, newService, startTime, endTime);
-
-                    // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
-                    accounting.AddServiceRecord(newServiceRecord);
-
-                    // Оновлення відображення у DataGrid після додавання нового запису
-                    PopulateServiceDataGrid();
-                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
-                    Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
-
-                    Service.IsHitTestVisible = false;
+                    else
+                    {
+                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Не введено жодного працівника", "Помилка");
+                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
                 }
             }
             else
             {
-                MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
+
+                // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
+                Dictionary<string, int> services = new Dictionary<string, int>
+                {
+                    { "Лише кузов", 250 },
+                    { "Кузов та салон", 350 },
+                    { "Хімчистка", 1800 }
+                };
+
+                if (services.ContainsKey(selectedService))
+                {
+                    int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
+
+                    // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
+                    // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
+
+                    // Початковий та кінцевий часи надання послуг
+                    //DateTime startTime = DateTime.Now;
+                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
+
+                    // Створення нової послуги
+                    Service newService = new Service(selectedService, (int)serviceCost);
+
+                    // Отримання вибраного часу (години та хвилини)
+                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+
+                    DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
+                    DateTime endTime = startTime.AddMinutes(30);
+
+                    //check if employees were entered
+                    if (employessAtOneService.Count > 0)
+                    {
+                        //create list with all employees that were added to atOneService table
+
+                        List<Employee> allEmplyees = new List<Employee>();
+
+                        foreach (var employee in employessAtOneService)
+                        {
+                            allEmplyees.Add(employee);
+                        }
+                        // Створення запису про надання послуги з вибраним працівником
+                        ServiceRecord newServiceRecord = accounting.ServiceRecords[editIndex-1];
+
+                        newServiceRecord.Service = newService;
+                        newServiceRecord.Employees = allEmplyees;
+                        newServiceRecord.StartTime = startTime;
+                        newServiceRecord.EndTime = endTime;
+
+                        // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+
+                        // Оновлення відображення у DataGrid після додавання нового запису
+                        PopulateServiceDataGrid();
+
+                        serviceRepository.UpdateUser(newServiceRecord);
+
+                        DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                        Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                        Service.IsHitTestVisible = false;
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                }
             }
+            
         }
 
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
@@ -282,6 +410,12 @@ namespace MWash
 
         private void PopulateEmployeesDataGrid()
         {
+            int i = 1;
+            foreach(var item in accounting.EmployeesList)
+            {
+                item.Id = i;
+                i++;
+            }
 
             // Очищення EmployeesDataGrid перед оновленням даних
             EmployeesDataGrid.ItemsSource = null;
@@ -398,10 +532,131 @@ namespace MWash
 
                     accounting.EmployeesList.RemoveAt(index);
                     userRepository.DeleteUser(itemToDelete);
+                    accounting.ServiceRecords = new ObservableCollection<ServiceRecord>(serviceRepository.GetUsers());
 
                     //refresh table
-                    CollectionViewSource.GetDefaultView(EmployeesDataGrid.ItemsSource).Refresh();
+                    PopulateEmployeesDataGrid();
 
+                }
+            }
+        }
+
+        async private void DeleteServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            var taggedObject = (sender as Button)?.Tag;
+
+            if (taggedObject != null)
+            {
+                PropertyInfo propertyInfo = taggedObject.GetType().GetProperty("Number");
+
+                if (propertyInfo != null)
+                {
+                    // Get the value of the 'id' property and try parsing it as an integer
+                    if (int.TryParse(propertyInfo.GetValue(taggedObject)?.ToString(), out int index))
+                    {
+                        // Animation for delete
+                        DataGridRow row = ServiceDataGrid.ItemContainerGenerator.ContainerFromItem(taggedObject) as DataGridRow;
+
+                        var storyboard = new Storyboard();
+                        var opacityAnimation = new DoubleAnimation
+                        {
+                            To = 0,
+                            Duration = TimeSpan.FromSeconds(0.3),
+                        };
+
+                        Storyboard.SetTarget(opacityAnimation, row);
+                        Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                        storyboard.Children.Add(opacityAnimation);
+
+                        storyboard.Begin();
+
+                        // Wait for the animation to complete
+                        await Task.Delay(300);
+
+                        // Delete the item from the underlying data source
+                        if (index-1 >= 0 && index-1 < accounting.ServiceRecords.Count)
+                        {
+                            accounting.ServiceRecords.RemoveAt(index-1);
+                        }
+                        else
+                        {
+                            // Handle the case where the index is out of range
+                            Console.WriteLine("Index is out of range.");
+                        }
+
+                        ServiceDataGrid.ItemsSource = null;
+                        ServiceDataGrid.ItemsSource = accounting.ServiceRecords;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to parse 'id' property as an integer.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The 'id' property does not exist.");
+                }
+            }
+            var list = serviceRepository.GetUsers().ToList();
+
+            foreach (var record in list)
+            {
+                if (accounting.ServiceRecords?.Contains(record) == false)
+                {
+                    serviceRepository.DeleteUser(record);
+                }
+            }
+            accounting.ServiceRecords = new ObservableCollection<ServiceRecord>(serviceRepository.GetUsers());
+            ServiceDataGrid.ItemsSource = null;
+            ServiceDataGrid.ItemsSource = accounting.ServiceRecords;
+            PopulateServiceDataGrid();
+        }
+
+        bool isEditing = true;
+        int editIndex = -1;
+        private void EditServiceRecordButton_Click(object sender, RoutedEventArgs e)
+        {
+            isEditing = true;
+            var taggedObject = (sender as Button)?.Tag;
+
+            if (taggedObject != null)
+            {
+                PropertyInfo propertyInfo = taggedObject.GetType().GetProperty("Number");
+
+                if (propertyInfo != null)
+                {
+                    // Get the value of the 'id' property and try parsing it as an integer
+                    if (int.TryParse(propertyInfo.GetValue(taggedObject)?.ToString(), out int index))
+                    {
+                        DataGridRow row = ServiceDataGrid.ItemContainerGenerator.ContainerFromItem(taggedObject) as DataGridRow;
+
+
+                        if (index - 1 >= 0 && index - 1 < accounting.ServiceRecords.Count)
+                        {
+                            editIndex = index;
+                            ServiceRecord newServiceRecord = accounting.ServiceRecords[index-1];
+
+                            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                            Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                            HourComboBox.SelectedIndex = newServiceRecord.StartTime.Hour;
+                            MinuteComboBox.SelectedIndex = newServiceRecord.StartTime.Minute;
+                            ServiceComboBox.Text = newServiceRecord.Service.ServiceName;
+                            Service.IsHitTestVisible = true;
+                            EmployeeNameTextBox.Text = "";
+                            employessAtOneService = new ObservableCollection<Employee>(newServiceRecord.Employees);
+                            currentEmployeesDataGrid.ItemsSource = employessAtOneService;
+
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to parse 'id' property as an integer.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The 'id' property does not exist.");
                 }
             }
         }

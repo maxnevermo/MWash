@@ -78,7 +78,9 @@
                                             BorderThickness="3"                           
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
-                                            Margin="5 0 0 0">
+                                            Margin="5 0 0 0"
+                                            Click="EditServiceRecordButton_Click"
+                                            Tag="{Binding}">
                                     </Button>
                                     <Button  Style="{DynamicResource closeButtonStyle}"  
                                              Width="20"
@@ -88,7 +90,9 @@
                                              BorderThickness="3"                           
                                              HorizontalAlignment="Right"
                                              VerticalAlignment="Center"
-                                             Margin="5 0 0 0">
+                                             Margin="5 0 0 0"
+                                             Click="DeleteServiceButton_Click"
+                                             Tag="{Binding}">
                                     </Button>
                                     
                                 </StackPanel>
@@ -322,38 +326,22 @@
                         </ComboBox>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="35,0,0,0" Height="40">
-                        <ComboBox x:Name="HourComboBox" Width="80">
-                            <ComboBoxItem Content="00"/>
-                            <ComboBoxItem Content="01"/>
-                            <ComboBoxItem Content="02"/>
-                            <ComboBoxItem Content="03"/>
-                            <ComboBoxItem Content="04"/>
-                            <ComboBoxItem Content="05"/>
-                            <ComboBoxItem Content="06"/>
-                            <ComboBoxItem Content="07"/>
-                            <ComboBoxItem Content="08"/>
-                            <ComboBoxItem Content="09"/>
-                            <ComboBoxItem Content="10"/>
-                            <ComboBoxItem Content="11"/>
-                            <ComboBoxItem Content="12"/>
-                            <ComboBoxItem Content="13"/>
-                            <ComboBoxItem Content="14"/>
-                            <ComboBoxItem Content="15"/>
-                            <ComboBoxItem Content="16"/>
-                            <ComboBoxItem Content="17"/>
-                            <ComboBoxItem Content="18"/>
-                            <ComboBoxItem Content="19"/>
-                            <ComboBoxItem Content="20"/>
-                            <ComboBoxItem Content="21"/>
-                            <ComboBoxItem Content="22"/>
-                            <ComboBoxItem Content="23"/>
+                        <ComboBox x:Name="HourComboBox" 
+                                  Width="80" 
+                                  Style="{DynamicResource ComboBoxStyle}" 
+                                  ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="20">
                         </ComboBox>
                         <TextBlock Text=" : " FontSize="25"/>
-                        <ComboBox x:Name="MinuteComboBox" Width="80">
-                            <ComboBoxItem Content="00"/>
-                            <ComboBoxItem Content="15"/>
-                            <ComboBoxItem Content="30"/>
-                            <ComboBoxItem Content="45"/>
+                        <ComboBox x:Name="MinuteComboBox" 
+                                  Width="80"
+                                  Style="{DynamicResource ComboBoxStyle}" 
+                                  ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="20">
                         </ComboBox>
                     </StackPanel>
 
@@ -425,7 +413,6 @@
                 </Grid>
             </Border>
         </Grid>
-
 
 
         <!--Employee window-->
