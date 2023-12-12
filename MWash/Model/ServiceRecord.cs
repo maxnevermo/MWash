@@ -15,7 +15,6 @@ namespace MWash
             public DateTime StartTime { get; set; }
             public DateTime EndTime { get; set; }
 
-
             // Конструктор класу ServiceRecord
             public ServiceRecord(List<Employee> employees, Service service, DateTime startTime, DateTime endTime)
             {
@@ -24,6 +23,5 @@ namespace MWash
                 StartTime = startTime;
                 EndTime = endTime;
             }
-
     }
 }

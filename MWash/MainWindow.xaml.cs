@@ -20,17 +20,25 @@ namespace MWash
 {
     public partial class MainWindow : Window
     {
-            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле
-            //for managing at one service table
+            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле 
             ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
             UserRepository userRepository = new UserRepository();
             ServiceRepository serviceRepository = new ServiceRepository();
 
-            public MainWindow()
+        private ObservableCollection<Employee> employees = new ObservableCollection<Employee>();
+
+        public int SelectedEmployeeId { get; set; }  // Зберігання обраного ідентифікатора працівника
+        public string SelectedEmployeeFullName { get; set; }  // Зберігання повного імені обраного працівника
+
+        public MainWindow()
             {
                 InitializeComponent();
+
                 List<Employee> allUsers = userRepository.GetUsers();
                 List<ServiceRecord> allRecords = serviceRepository.GetUsers();
+
+            DataContext = this;
+
 
                 if (allUsers != null )
                 {
@@ -75,8 +83,28 @@ namespace MWash
 
                     MinuteComboBox.Items.Add(sb.ToString());
                 }
-
+                FillEmployeeComboBox();
         }
+
+        private void FillEmployeeComboBox()
+        {
+            // Отримання списку працівників з об'єкта accounting
+            List<Employee> allUsers = userRepository.GetUsers();
+
+            if (allUsers != null)
+            {
+                foreach (var user in allUsers)
+                {
+                    employees.Add(user);
+                }
+            }
+
+            // Налаштування джерела даних для ComboBox
+            EmployeeComboBox.ItemsSource = employees;
+            EmployeeComboBox.DisplayMemberPath = "FullName"; // Поле, яке ви хочете відображати у ComboBox
+            EmployeeComboBox.SelectedValuePath = "Id"; // Поле, яке ви хочете використовувати як значення в ComboBox
+        }
+
 
         private void openSalaryButton_Click(object sender, RoutedEventArgs e)
         {
@@ -147,57 +175,40 @@ namespace MWash
 
             ServiceComboBox.Text = string.Empty;
             Service.IsHitTestVisible = true;
-            EmployeeNameTextBox.Text = "";
+            //EmployeeNameTextBox.Text = "";
             employessAtOneService.Clear();
             HourComboBox.SelectedIndex = 0;
             MinuteComboBox.SelectedIndex = 0;
             currentEmployeesDataGrid.ItemsSource = null;
         }
+
         private void addEmployeeButton_Click(object sender, RoutedEventArgs e)
         {
-            string surname_name_of_employee = EmployeeNameTextBox.Text.Trim();
+            int selectedEmployeeId = EmployeeComboBox.SelectedValue as int? ?? -1;
 
-            if (!string.IsNullOrEmpty(surname_name_of_employee))
+            if (selectedEmployeeId != -1)
             {
-                string[] nameParts = Regex.Split(surname_name_of_employee, @"\s+");
-                //check if two words are entered
-                if (nameParts.Length == 2 ) {
-                    string name = nameParts[1];
-                    string surname = nameParts[0];
+                // Знайдення працівника за обраним ідентифікатором у списку всіх працівників
+                Employee selectedEmployee = accounting.EmployeesList.FirstOrDefault(emp => emp.Id == selectedEmployeeId);
 
-                    // Add employees to the employee at one service table
-                    Employee newEmployee = new Employee(surname, name, "", 0);
+                if (selectedEmployee != null)
+                {
+                    employessAtOneService.Add(selectedEmployee);
 
-                    // Find the matching employee
-                    Employee toFind = accounting.EmployeesList.FirstOrDefault(e => e.LastName.Trim() == newEmployee.LastName.Trim() && e.FirstName.Trim() == newEmployee.FirstName.Trim());
-
-                    if (toFind != null)
-                    {
-                        employessAtOneService.Add(toFind);
-
-                        EmployeeNameTextBox.Text = "";
-
-                        currentEmployeesDataGrid.ItemsSource = null;
-                        currentEmployeesDataGrid.ItemsSource = employessAtOneService;
-                    }
-
-                    else
-                    {
-                        MessageBox.Show("Current employee doesn’t exists. Add it to the data first", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    currentEmployeesDataGrid.ItemsSource = null; // Clear the ItemsSource
-                    currentEmployeesDataGrid.ItemsSource = employessAtOneService; // Reassign the ItemsSource
+                    currentEmployeesDataGrid.ItemsSource = null;
+                    currentEmployeesDataGrid.ItemsSource = employessAtOneService;
                 }
                 else
                 {
-                    MessageBox.Show("Enter exactly two words (surname and name)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Обраний працівник не знайдений. Спробуйте знову.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Enter employee surname and name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Будь ласка, виберіть працівника зі списку.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         async private void deleteEmployeeButton_Click(object sender, RoutedEventArgs e)
@@ -241,6 +252,64 @@ namespace MWash
 
         }
 
+        /*private void addServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
+
+            // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
+            Dictionary<string, int> services = new Dictionary<string, int>
+    {
+        { "Лише кузов", 250 },
+        { "Кузов та салон", 350 },
+        { "Хімчистка", 1800 }
+    };
+
+            if (services.ContainsKey(selectedService))
+            {
+                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
+
+                // Отримання вибраного працівника з ComboBox
+                Employee selectedEmployee = EmployeeComboBox.SelectedItem as Employee;
+
+                if (selectedEmployee != null)
+                {
+                    // Створення нової послуги
+                    Service newService = new Service(selectedService, serviceCost);
+
+                    // Отримання вибраного часу (години та хвилини)
+                    int selectedHour = int.Parse(((ComboBoxItem)HourComboBox.SelectedItem).Content.ToString());
+                    int selectedMinute = int.Parse(((ComboBoxItem)MinuteComboBox.SelectedItem).Content.ToString());
+
+                    DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
+                    DateTime endTime = startTime.AddMinutes(30);
+
+                    // Створення запису про надання послуги з вибраним працівником
+                    ServiceRecord newServiceRecord = new ServiceRecord(new List<Employee> { selectedEmployee }, newService, startTime, endTime);
+
+                    // Додавання нового запису до ServiceRecords через об'єкт MWashAccounting (accounting)
+                    accounting.AddServiceRecord(newServiceRecord);
+
+                    // Оновлення відображення у DataGrid після додавання нового запису
+                    PopulateServiceDataGrid();
+
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                    Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                    Service.IsHitTestVisible = false;
+                }
+                else
+                {
+                    MessageBox.Show("Помилка: Оберіть працівника зі списку.", "Помилка");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Помилка: Вибрана послуга не існує у списку.", "Помилка");
+            }
+        }*/
+
+
+
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isEditing)
@@ -255,12 +324,11 @@ namespace MWash
                     { "Хімчистка", 1800 }
                 };
 
-                if (services.ContainsKey(selectedService))
-                {
-                    int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-                    // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
-                    // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
+            if (services.ContainsKey(selectedService))
+            {
+                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
+
 
                     // Початковий та кінцевий часи надання послуг
                     //DateTime startTime = DateTime.Now;
@@ -660,5 +728,58 @@ namespace MWash
                 }
             }
         }
+
+
+        private void GenerateReport(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = ReportComboBox.SelectedItem as ComboBoxItem;
+
+            if (selectedItem != null)
+            {
+                string selectedOption = selectedItem.Content.ToString();
+
+                if (selectedOption == "за день")
+                {
+                    // Отримати поточну дату для формування звіту за день
+                    DateTime currentDate = DateTime.Now;
+                    accounting.GenerateReportForDay(currentDate);
+                }
+                else if (selectedOption == "за тиждень")
+                {
+                    // Отримати дати для формування звіту за тиждень (останній тиждень)
+                    DateTime endDate = DateTime.Now;
+                    DateTime startDate = endDate.AddDays(-7);
+                    accounting.GenerateReportForWeek(startDate);
+
+                    // Якщо користувач вибрав "Створити файл звіту", зберегти звіт у текстовий файл
+                    if (CreateFileCheckBox.IsChecked == true)
+                    {
+                        // Зберегти звіт у текстовий файл
+                        // Вам необхідно додати відповідний код для збереження у файлі звіту за тиждень
+                        // Наприклад:
+                        // accounting.SaveReportToFile("Звіт_за_тиждень.txt", reportContent);
+                    }
+                }
+                else if (selectedOption == "за обраний проміжок часу")
+                {
+                    // Отримати обраний проміжок часу для формування звіту
+                    // DateTime selectedStartDate = ...; // введіть обрану користувачем початкову дату
+                    // DateTime selectedEndDate = ...;   // введіть обрану користувачем кінцеву дату
+                    // Ваш код для формування звіту за обраний проміжок часу
+                    // accounting.GenerateReportForSelectedPeriod(selectedStartDate, selectedEndDate);
+
+                    // Якщо користувач вибрав "Створити файл звіту", додайте код для збереження у текстовий файл
+                    if (CreateFileCheckBox.IsChecked == true)
+                    {
+                        // Зберегти звіт у текстовий файл
+                        // Вам необхідно додати відповідний код для збереження у файлі звіту за обраний проміжок часу
+                    }
+                }
+            }
+        }
+
+
+
+
     }
 }
