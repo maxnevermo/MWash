@@ -414,7 +414,7 @@
                     </ComboBox>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="35,0,0,0" Height="40">
-                        <ComboBox x:Name="HourComboBox" 
+                        <ComboBox x:Name="StartHourComboBox" 
                                   Width="80" 
                                   Style="{DynamicResource ComboBoxStyle}" 
                                   ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
@@ -423,13 +423,33 @@
                                   FontSize="20">
                         </ComboBox>
                         <TextBlock Text=" : " FontSize="25"/>
-                        <ComboBox x:Name="MinuteComboBox" 
+                        <ComboBox x:Name="StartMinuteComboBox" 
                                   Width="80"
                                   Style="{DynamicResource ComboBoxStyle}" 
                                   ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
                                   HorizontalContentAlignment="Center"
                                   VerticalContentAlignment="Center"
                                   FontSize="20">
+                        </ComboBox>
+
+                        <TextBlock Text=" - " FontSize="25"/>
+
+                        <ComboBox x:Name="EndHourComboBox" 
+                                  Width="80" 
+                                  Style="{DynamicResource ComboBoxStyle}" 
+                                  ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center"
+                                  FontSize="20">
+                        </ComboBox>
+                        <TextBlock Text=" : " FontSize="25"/>
+                        <ComboBox x:Name="EndMinuteComboBox" 
+                                          Width="80"
+                                          Style="{DynamicResource ComboBoxStyle}" 
+                                          ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          FontSize="20">
                         </ComboBox>
                     </StackPanel>
 
@@ -559,7 +579,7 @@
                     </Button>
                     <Button
                             Height="50"
-                            Content="Add enployee" 
+                            Content="Add employee" 
                             FontSize="20"
                             Width="272"
                             FontWeight="DemiBold"
