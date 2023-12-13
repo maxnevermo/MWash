@@ -66,7 +66,8 @@ namespace MWash
 
                 sb.Append(i);
 
-                HourComboBox.Items.Add(sb.ToString());
+                StartHourComboBox.Items.Add(sb.ToString());
+                EndHourComboBox.Items.Add(sb.ToString());
             }
             for (int i = 0; i <= 60; i++)
             {
@@ -79,7 +80,8 @@ namespace MWash
 
                 sb.Append(i);
 
-                MinuteComboBox.Items.Add(sb.ToString());
+                StartMinuteComboBox.Items.Add(sb.ToString());
+                EndMinuteComboBox.Items.Add(sb.ToString());
             }
             FillEmployeeComboBox();
         }
@@ -202,8 +204,10 @@ namespace MWash
             Service.IsHitTestVisible = true;
             EmployeeComboBox.Text = string.Empty;
             employessAtOneService.Clear();
-            HourComboBox.Text = string.Empty;
-            MinuteComboBox.Text = string.Empty;
+            StartHourComboBox.Text = string.Empty;
+            EndHourComboBox.Text = string.Empty;
+            StartMinuteComboBox.Text = string.Empty;
+            EndMinuteComboBox.Text = string.Empty;
             currentEmployeesDataGrid.ItemsSource = null;
         }
 
@@ -283,6 +287,23 @@ namespace MWash
             {
                 string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
+                int minMinutes;
+                switch (selectedService)
+                {
+                    case "Body only":
+                        minMinutes = 15;
+                        break;
+                    case "Body and interior":
+                        minMinutes = 25;
+                        break;
+                    case "Dry cleaning":
+                        minMinutes = 60;
+                        break;
+                    default:
+                        minMinutes = 30; // Дефолтне значення
+                        break;
+                }
+
                 // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
                 Dictionary<string, int> services = new Dictionary<string, int>
                 {
@@ -297,20 +318,25 @@ namespace MWash
                     int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
 
-                    // Початковий та кінцевий часи надання послуг
-                    //DateTime startTime = DateTime.Now;
-                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
-
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
                     // Отримання вибраного часу (години та хвилини)
-                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
-                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+                    int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
 
+                    int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
+                    int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
 
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                    DateTime endTime = startTime.AddMinutes(30);
+                    DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if ((endTime - startTime).TotalMinutes < minMinutes)
+                    {
+                        // Вивести повідомлення про помилку
+                        MessageBox.Show($"Minimum duration for {selectedService} is {minMinutes} minutes.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     //check if employees were entered
                     if (employessAtOneService.Count > 0)
@@ -352,6 +378,23 @@ namespace MWash
             {
                 string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
+                int minMinutes;
+                switch (selectedService)
+                {
+                    case "Body only":
+                        minMinutes = 15;
+                        break;
+                    case "Body and interior":
+                        minMinutes = 25;
+                        break;
+                    case "Dry cleaning":
+                        minMinutes = 60;
+                        break;
+                    default:
+                        minMinutes = 30; // Дефолтне значення
+                        break;
+                }
+
                 // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
                 Dictionary<string, int> services = new Dictionary<string, int>
                 {
@@ -364,22 +407,26 @@ namespace MWash
                 {
                     int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-                    // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
-                    // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
-
-                    // Початковий та кінцевий часи надання послуг
-                    //DateTime startTime = DateTime.Now;
-                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
-
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
                     // Отримання вибраного часу (години та хвилини)
-                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
-                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+                    int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
+
+                    int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
+                    int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
+
 
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                    DateTime endTime = startTime.AddMinutes(30);
+                    DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if ((endTime - startTime).TotalMinutes < minMinutes)
+                    {
+                        // Вивести повідомлення про помилку
+                        MessageBox.Show($"Minimum duration for {selectedService} is {minMinutes} minutes.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     //check if employees were entered
                     if (employessAtOneService.Count > 0)
@@ -699,8 +746,8 @@ namespace MWash
                             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                             Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
-                            HourComboBox.SelectedIndex = newServiceRecord.StartTime.Hour;
-                            MinuteComboBox.SelectedIndex = newServiceRecord.StartTime.Minute;
+                            StartHourComboBox.SelectedIndex = newServiceRecord.StartTime.Hour;
+                            StartMinuteComboBox.SelectedIndex = newServiceRecord.StartTime.Minute;
                             ServiceComboBox.Text = newServiceRecord.Service.ServiceName;
                             Service.IsHitTestVisible = true;
                             EmployeeNameTextBox.Text = "";
