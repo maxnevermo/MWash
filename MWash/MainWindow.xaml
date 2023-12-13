@@ -36,7 +36,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="540"/>
@@ -56,15 +56,15 @@
                     <DataGridTextColumn Header="№" IsReadOnly="True" CanUserResize="False" Width="200" Binding="{Binding Number}"/>
 
 
-                    <DataGridTextColumn Header="Працівник/-и" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Employee}"/>
-                    <DataGridTextColumn Header="Послуга" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Service}"/>
-                    <DataGridTextColumn Header="Ціна" CanUserResize="False" IsReadOnly="True" Width="100" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Header="Employees" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Employee}"/>
+                    <DataGridTextColumn Header="Service" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding Service}"/>
+                    <DataGridTextColumn Header="Price" CanUserResize="False" IsReadOnly="True" Width="100" Binding="{Binding Price}"/>
 
-                    <DataGridTextColumn Header="Дата виконання" CanUserResize="False" IsReadOnly="True" Width="200">
+                    <DataGridTextColumn Header="Start time" CanUserResize="False" IsReadOnly="True" Width="200">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="Time"  StringFormat="dd MMMM , yyyy"/>
+                            <Binding Path="Time"  StringFormat="d MMM yyyy"/>
                         </DataGridTextColumn.Binding>
-                    </DataGridTextColumn>                    
+                    </DataGridTextColumn>
 
                     <DataGridTemplateColumn Header="" CanUserResize="False" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
@@ -94,7 +94,7 @@
                                              Click="DeleteServiceButton_Click"
                                              Tag="{Binding}">
                                     </Button>
-                                    
+
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -107,7 +107,7 @@
                 Width="280" 
                 HorizontalAlignment="Right" 
                 Margin="20,20,40,20" 
-                Content="Додати послугу"
+                Content="Add service"
                 FontSize="20"
                 FontWeight="DemiBold"
                 Background="#96BBF3"
@@ -131,7 +131,7 @@
 
             <Button Grid.Column ="0" 
                     Height="50"
-                    Content="Звіт" 
+                    Content="Report" 
                     FontSize="20"
                     FontWeight="DemiBold"
                     Margin="45,0,45,0"
@@ -149,7 +149,7 @@
 
             <Button Grid.Column ="1" 
                     Height="50"
-                    Content="Зарплата"
+                    Content="Salary"
                     FontSize="20"
                     FontWeight="DemiBold"
                     Margin="45,0,45,0"
@@ -158,16 +158,16 @@
                     BorderBrush="#000000"
                     Click="openSalaryButton_Click">
 
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="20"/>
-                        </Style>
-                    </Button.Resources>
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="20"/>
+                    </Style>
+                </Button.Resources>
             </Button>
 
             <Button Grid.Column ="2" 
                     Height="50"
-                    Content="Керування"
+                    Content="Control"
                     FontSize="20"
                     FontWeight="DemiBold"
                     Margin="45,0,45,0"
@@ -180,9 +180,9 @@
                         <Setter Property="CornerRadius" Value="20"/>
                     </Style>
                 </Button.Resources>
-          </Button>
+            </Button>
         </Grid>
-      
+
         <!--Salary window-->
         <Grid x:Name="Salary" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Button Background="#000000" 
@@ -196,18 +196,18 @@
                                 BorderBrush="#000"
                                 BorderThickness="1.5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Ім’я" Width="*" Binding="{Binding Name}">
+                            <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Прізвище" Width="*" Binding="{Binding Surname}">
+                            <DataGridTextColumn Header="Surname" Width="*" Binding="{Binding Surname}">
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Зарплата" Width="*" Binding="{Binding Salary}">
+                            <DataGridTextColumn Header="Salary" Width="*" Binding="{Binding Salary}">
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </Border>
         </Grid>
-        
+
         <!--Report window-->
         <Grid x:Name="Report" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
             <Button Background="#000000" 
@@ -243,9 +243,9 @@
                                 <Setter Property="Background" Value="#96BBF3"/>
                             </Style>
                         </ComboBox.Resources>
-                        <ComboBoxItem Content="за день" IsSelected="True"/>
-                        <ComboBoxItem Content="за тиждень"/>
-                        <ComboBoxItem Content="за обраний проміжок часу"/>
+                        <ComboBoxItem Content="per day" IsSelected="True"/>
+                        <ComboBoxItem Content="per week"/>
+                        <ComboBoxItem Content="for the selected period of time"/>
                     </ComboBox>
 
                     <Border Grid.Row="1" Width="300" Height="60" Background="#96BBF3" BorderBrush="#000000" BorderThickness="2" CornerRadius="20">
@@ -253,7 +253,7 @@
                                     Grid.Row="1"
                                     Width="300"
                                     Height="60"
-                                    Content="Створити файл звіту"
+                                    Content="Create file report"
                                     Background="#96BBF3"
                                     FontSize="20"
                                     VerticalContentAlignment="Center"
@@ -267,7 +267,7 @@
                                         Width="200"
                                         Height="45"
                                         VerticalAlignment="Top"
-                                        Content="Сформувати"
+                                        Content="Generate"
                                         FontSize="25"
                                         FontWeight="DemiBold"
                                         Background="#96BBF3"
@@ -283,6 +283,85 @@
                 </Grid>
             </Border>
         </Grid>
+
+        <!--Report date window-->
+        <Grid x:Name="ReportDatePicker" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
+            <Button Background="#000000" 
+    Opacity="0.3" 
+    Click="exitReportDateButton_Click" 
+    Style="{StaticResource NoHoverButtonStyle}"/>
+
+            <Border Background="#fff" Width="360" Height="290" CornerRadius="15">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+
+
+                    <DatePicker Grid.Row="0" x:Name="startDatePicker"/>
+                    <DatePicker Grid.Row="1" x:Name="endDatePicker"/>
+
+                    <Button Grid.Row="2"
+                                Width="200"
+                                Height="45"
+                                VerticalAlignment="Top"
+                                Content="Generate"
+                                FontSize="25"
+                                FontWeight="DemiBold"
+                                Background="#96BBF3"
+                                BorderBrush="#000000"
+                                BorderThickness="2"
+                                Click="ConfirmDateReport">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--Report table window-->
+        <Grid x:Name="ReportTable" Grid.RowSpan="3" Grid.Row="0"  Opacity="0    " IsHitTestVisible="False">
+            <Button Background="#000000" 
+            Opacity="0.3" 
+            Click="exitReportTableButton_Click" 
+            Style="{StaticResource NoHoverButtonStyle}"/>
+
+            <Border Background="#fff" Width="610" Height="280" CornerRadius="15">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock x:Name="ReportDateTextBlock" Text="DATE" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"  Margin="0 0 0 0" Grid.Row="0"/>
+
+                    <DataGrid Style="{DynamicResource DataGridStyle1}" x:FieldModifier="public" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" 
+                        Grid.Row="1"  
+                        Width="561"
+                        x:Name="DailyReportDataGrid" AutoGenerateColumns="False" Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Service Name" CanUserResize="False" IsReadOnly="True" Width="200" Binding="{Binding ServiceName}" Foreground="Black"/>
+                            <DataGridTextColumn Header="Times Used" CanUserResize="False" IsReadOnly="True" Width="120" Binding="{Binding TotalCount}" Foreground="Black"/>
+                            <DataGridTextColumn Header="Cost per Service" CanUserResize="False" IsReadOnly="True" Width="120" Binding="{Binding CostPerService}" Foreground="Black"/>
+                            <DataGridTextColumn Header="Total Cost" CanUserResize="False" IsReadOnly="True" Width="120" Binding="{Binding TotalCost}" Foreground="Black"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock x:Name="TotalCostTextBlock" Text="DATE" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"  Margin="0 0 30 0" Grid.Row="2"/>
+
+                </Grid>
+            </Border>
+        </Grid>
+
 
         <!--Add service window-->
         <Grid x:Name="Service" Grid.RowSpan="3" Grid.Row="0"  Opacity="0" IsHitTestVisible="False">
@@ -305,8 +384,8 @@
 
                     <TextBlock Text="Add New Service" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Height="50" Margin="0 0 0 0" Grid.Row="0"/>
 
-                    
-                        <TextBlock Text="Service type:" Width="415"
+
+                    <TextBlock Text="Service type:" Width="415"
                                     Height="60"
                                     FontSize="25"
                                     HorizontalAlignment="Center"
@@ -322,11 +401,11 @@
                               Height="40" 
                               Margin="0 30 0 0"
                               VerticalContentAlignment="Center">
-                        
-                            <ComboBoxItem Content="Лише кузов"/>
-                            <ComboBoxItem Content="Кузов та салон"/>
-                            <ComboBoxItem Content="Хімчистка"/>
-                        </ComboBox>
+
+                        <ComboBoxItem Content="Body only"/>
+                        <ComboBoxItem Content="Body and interior"/>
+                        <ComboBoxItem Content="Dry cleaning"/>
+                    </ComboBox>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="35,0,0,0" Height="40">
                         <ComboBox x:Name="HourComboBox" 
@@ -345,7 +424,6 @@
                                   HorizontalContentAlignment="Center"
                                   VerticalContentAlignment="Center"
                                   FontSize="20">
-
                         </ComboBox>
                     </StackPanel>
 
@@ -369,19 +447,19 @@
                             <TextBlock Text="+" FontSize="50" Margin="0 -21 0 0"/>
                         </Button>
                     </StackPanel>
-                 
-                    
 
 
-                  
-                        <TextBox x:Name="EmployeeNameTextBox" 
+
+
+
+                    <TextBox x:Name="EmployeeNameTextBox" 
                                  Style="{StaticResource addEmployeeTextBox}"
                                  Grid.Row="3"
                                  Visibility="Collapsed"
                                  Text="{Binding SelectedEmployeeFullName}"/>
 
 
-                            <!--TextBlock Text="Employee surname &amp; name:" Width="415"
+                    <!--TextBlock Text="Employee surname &amp; name:" Width="415"
                                    Height="60"
                                    FontSize="25"
                                    HorizontalAlignment="Center"
@@ -390,7 +468,7 @@
                     <TextBox x:Name="EmployeeNameTextBox"
                                  Style="{StaticResource addEmployeeTextBox}"
                                 Grid.Row="3">
-                    </TextBox-->                 
+                    </TextBox-->
 
 
 
@@ -427,9 +505,9 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                        
 
-                        <Button Content="Додати послугу"  HorizontalAlignment="Center" Click="addServiceButton_Click" 
+
+                    <Button Content="Add service"  HorizontalAlignment="Center" Click="addServiceButton_Click" 
                                         Margin="0 20 0 0" 
                                         Grid.Row="6"
                                         Width="415"
@@ -440,12 +518,12 @@
                                         Background="#96BBF3"
                                         BorderBrush="#000000"
                                         BorderThickness="2">
-                            <Button.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="20"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </Grid>
             </Border>
         </Grid>
@@ -457,7 +535,7 @@
                 <Grid>
                     <Button
                     Height="50"
-                    Content="Назад" 
+                    Content="Back" 
                     FontSize="20"
                     Width="272"
                     FontWeight="DemiBold"
@@ -475,7 +553,7 @@
                     </Button>
                     <Button
                             Height="50"
-                            Content="Додати працівника" 
+                            Content="Add enployee" 
                             FontSize="20"
                             Width="272"
                             FontWeight="DemiBold"
@@ -608,7 +686,7 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Top"
                                            Margin="35,0,0,0">
-                                    
+
                                 </TextBlock>
                                 <TextBox Grid.Row="2"
                                          Width="415"
@@ -632,7 +710,7 @@
                                         Width="415"
                                         Height="60"
                                         VerticalAlignment="Top"
-                                        Content="Додати працівника"
+                                        Content="Add employee"
                                         FontSize="25"
                                         FontWeight="DemiBold"
                                         Background="#96BBF3"
@@ -651,5 +729,5 @@
                 </Grid>
             </Border>
         </Grid>
-        </Grid>
+    </Grid>
 </Window>
