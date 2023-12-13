@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -520,6 +521,20 @@ namespace MWash
             string phone = Phone.Text;
             int id = accounting.EmployeesList.Count + 1;
 
+            // Перевірка на введення лише букв та першої великої літери для імені та прізвища
+            if (!Regex.IsMatch(name, @"^[A-ZА-ЯҐЄІЇ][a-zа-яґєії]+$") || !Regex.IsMatch(surname, @"^[A-ZА-ЯҐЄІЇ][a-zа-яґєії]+$"))
+            {
+                MessageBox.Show("Please enter a valid name and surname (first letter capital, letters only).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Перевірка на введення лише чисел для номеру телефону
+            if (!Regex.IsMatch(phone, @"^[0-9]+$"))
+            {
+                MessageBox.Show("Please enter a valid phone number (numbers only).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             Employee employee = new Employee(surname, name, phone, id);
 
             if (!accounting.EmployeesList.Contains(employee))
@@ -539,8 +554,8 @@ namespace MWash
             AddEmployee.IsHitTestVisible = false;
 
             FillEmployeeComboBox();
-
         }
+
 
         async private void DeleteEmployeeFromTableButton_Click(object sender, RoutedEventArgs e)
         {
