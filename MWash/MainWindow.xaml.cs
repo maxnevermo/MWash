@@ -502,7 +502,7 @@ namespace MWash
                     Employee = string.Join(", ", record.Employees.Select(emp => $"{emp.FirstName} {emp.LastName}")),
                     Service = record.Service.ServiceName,
                     Price = record.Service.ServiceCost,
-                    Time = record.StartTime.ToString("d MMM, yyyy HH:mm:ss", culture)
+                    Time = $"{record.StartTime.ToString("HH:mm", culture)} - {record.EndTime.ToString("HH:mm", culture)}"
                 })
                 .ToList();
 
@@ -521,19 +521,20 @@ namespace MWash
             string phone = Phone.Text;
             int id = accounting.EmployeesList.Count + 1;
 
-            // Перевірка на введення лише букв та першої великої літери для імені та прізвища
-            if (!Regex.IsMatch(name, @"^[A-ZА-ЯҐЄІЇ][a-zа-яґєії]+$") || !Regex.IsMatch(surname, @"^[A-ZА-ЯҐЄІЇ][a-zа-яґєії]+$"))
+            // Перевірка на введення лише букв латини для прізвища та імені
+            if (!Regex.IsMatch(name, @"^[A-Za-z-]{1,60}$") || !Regex.IsMatch(surname, @"^[A-Za-z-]{1,60}$"))
             {
-                MessageBox.Show("Please enter a valid name and surname (first letter capital, letters only).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a valid name and surname (only Latin letters and hyphen, maximum 60 characters, minimum 1).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Перевірка на введення лише чисел для номеру телефону
-            if (!Regex.IsMatch(phone, @"^[0-9]+$"))
+            // Перевірка на введення лише '+', а потім дванадцять цифр для номеру телефону
+            if (!Regex.IsMatch(phone, @"^\+[0-9]{12}$"))
             {
-                MessageBox.Show("Please enter a valid phone number (numbers only).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a valid phone number (starts with '+', followed by twelve digits).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+
 
             Employee employee = new Employee(surname, name, phone, id);
 
