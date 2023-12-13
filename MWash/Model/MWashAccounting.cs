@@ -37,7 +37,7 @@ namespace MWash
             }
             else
             {
-                MessageBox.Show("Усі службові бокси в даний момент зайняті. Неможливо додати новий запис про послугу.", "Помилка");
+                MessageBox.Show("All service boxes are currently occupied. Cannot add a new service record.", "Error");
             }
         }
 
