@@ -229,12 +229,12 @@ namespace MWash
                 }
                 else
                 {
-                    MessageBox.Show("Обраний працівник не знайдений. Спробуйте знову.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("The selected worker was not found. Try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Будь ласка, виберіть працівника зі списку.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select a worker from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -321,6 +321,12 @@ namespace MWash
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
+                    if (string.IsNullOrEmpty(StartHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(StartMinuteComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndMinuteComboBox.SelectedItem?.ToString()))
+                    {
+                        MessageBox.Show("Please select both start and end times.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
                     // Отримання вибраного часу (години та хвилини)
                     int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
                     int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
@@ -328,8 +334,16 @@ namespace MWash
                     int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
                     int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
 
+                    
+
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
                     DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if (endTime <= startTime)
+                    {
+                        MessageBox.Show("End time should be greater than start time.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     if ((endTime - startTime).TotalMinutes < minMinutes)
                     {
@@ -366,12 +380,12 @@ namespace MWash
                     }
                     else
                     {
-                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                        MessageBox.Show("No worker entered", "Error");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                    MessageBox.Show("The selected service does not exist in the list.", "Error");
                 }
             }
             else
@@ -410,6 +424,13 @@ namespace MWash
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
+                    if (string.IsNullOrEmpty(StartHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(StartMinuteComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndMinuteComboBox.SelectedItem?.ToString()))
+                    {
+                        MessageBox.Show("Please select both start and end times.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+
                     // Отримання вибраного часу (години та хвилини)
                     int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
                     int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
@@ -417,9 +438,16 @@ namespace MWash
                     int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
                     int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
 
+                    
 
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
                     DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if (endTime <= startTime)
+                    {
+                        MessageBox.Show("End time should be greater than start time.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     if ((endTime - startTime).TotalMinutes < minMinutes)
                     {
@@ -462,12 +490,12 @@ namespace MWash
                     }
                     else
                     {
-                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                        MessageBox.Show("No worker entered.", "Error");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                    MessageBox.Show("The selected service does not exist in the list.", "Error");
                 }
             }
 
