@@ -42,7 +42,7 @@
     <SolidColorBrush x:Key="ComboBox.MouseOver.Background" Color="Transparent"/>
 
     <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#000000"/>
-    <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="red"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="#000000"/>
     <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" Color="Transparent"/>
@@ -51,7 +51,7 @@
     <SolidColorBrush x:Key="ComboBox.Pressed.Background" Color="Transparent"/>
 
     <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#000000"/>
-    <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="red"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background" Color="Transparent"/>
     <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Border" Color="#000000"/>
     <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Background" Color="Transparent"/>
