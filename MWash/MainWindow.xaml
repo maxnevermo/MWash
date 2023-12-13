@@ -35,6 +35,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
     </Window.Resources>
 
     <Grid>
@@ -62,7 +63,7 @@
 
                     <DataGridTextColumn Header="Start time" CanUserResize="False" IsReadOnly="True" Width="200">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="Time"  StringFormat="d MMM yyyy"/>
+                            <Binding Path="Time" StringFormat="{}{0:dd MMM yyyy}" ConverterCulture="en-US" />
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
@@ -295,17 +296,21 @@
                 <Grid>
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
+                    <TextBlock Text="Choose date" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Margin="0 20 0 10" Grid.Row="0"/>
 
 
-                    <DatePicker Grid.Row="0" x:Name="startDatePicker"/>
-                    <DatePicker Grid.Row="1" x:Name="endDatePicker"/>
+                    <TextBlock Text="Start Date" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"  Margin="0 10 0 0" Grid.Row="1"/>
+                    <DatePicker Grid.Row="1" x:Name="startDatePicker" HorizontalAlignment="Center" VerticalAlignment="Center" Width="250" Margin="0 20 0 0"/>
+                    <TextBlock Text="End Date" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"  Margin="0 10 0 0" Grid.Row="2"/>
+                    <DatePicker Grid.Row="2" x:Name="endDatePicker" HorizontalAlignment="Center" VerticalAlignment="Center" Width="250" Margin="0 20 0 0"/>
 
-                    <Button Grid.Row="2"
+                    <Button Grid.Row="3"
                                 Width="200"
                                 Height="45"
                                 VerticalAlignment="Top"
@@ -315,7 +320,8 @@
                                 Background="#96BBF3"
                                 BorderBrush="#000000"
                                 BorderThickness="2"
-                                Click="ConfirmDateReport">
+                                Click="ConfirmDateReport"
+                                Margin="0 10 0 0">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="20"/>

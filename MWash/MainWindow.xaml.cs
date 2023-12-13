@@ -502,7 +502,7 @@ namespace MWash
                     Employee = string.Join(", ", record.Employees.Select(emp => $"{emp.FirstName} {emp.LastName}")),
                     Service = record.Service.ServiceName,
                     Price = record.Service.ServiceCost,
-                    Time = record.StartTime.ToString("dd MMMM, yyyy HH:mm:ss")
+                    Time = record.StartTime.ToString("d MMM, yyyy HH:mm:ss", culture)
                 })
                 .ToList();
 
@@ -821,6 +821,18 @@ namespace MWash
             // Отримання обраних користувачем початкової та кінцевої дат для формування звіту
             DateTime selectedStartDate = startDatePicker.SelectedDate.GetValueOrDefault(); // Початкова дата, обрана користувачем
             DateTime selectedEndDate = endDatePicker.SelectedDate.GetValueOrDefault(); // Кінцева дата, обрана користувачем
+
+            if (selectedStartDate > DateTime.Today || selectedEndDate > DateTime.Today)
+            {
+                MessageBox.Show("Please select dates equal to or less than today's date.", "Invalid Date Selection", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (selectedStartDate > selectedEndDate)
+            {
+                MessageBox.Show("End date should be greater than or equal to the start date.", "Invalid Date Range", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             // Генерація звіту за обраним проміжком часу
             List<(string ServiceName, int TotalCount, double CostPerService)> selectedPeriodReportData = accounting.GenerateReportForSelectedPeriod(selectedStartDate, selectedEndDate);
