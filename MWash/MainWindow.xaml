@@ -512,17 +512,29 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
+                                                <Button Style="{DynamicResource closeButtonStyle}"  
+                                                            Width="20"
+                                                            Height="20"
+                                                            BorderBrush="#333"                           
+                                                            Background="Transparent"
+                                                            BorderThickness="3"                           
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            Margin="5 0 0 0"
+                                                            Click="EditEmployeeButton_Click"
+                                                            Tag="{Binding}">
+                                                    </Button>
                                                 <Button  Style="{DynamicResource closeButtonStyle}"  
-                                                           Width="20"
-                                                           Height="20"
-                                                           BorderBrush="#FFE94D4D"                           
-                                                           Background="Transparent"
-                                                           BorderThickness="3"                           
-                                                           HorizontalAlignment="Right"
-                                                           VerticalAlignment="Center"
-                                                           Margin="5 0 0 0"
-                                                           Click="DeleteEmployeeFromTableButton_Click"
-                                                           Tag="{Binding}">
+                                                             Width="20"
+                                                             Height="20"
+                                                             BorderBrush="#FFE94D4D"                           
+                                                             Background="Transparent"
+                                                             BorderThickness="3"                           
+                                                             HorizontalAlignment="Right"
+                                                             VerticalAlignment="Center"
+                                                             Margin="5 0 0 0"
+                                                             Click="DeleteEmployeeFromTableButton_Click"
+                                                             Tag="{Binding}">
                                                 </Button>
                                             </StackPanel>
                                         </DataTemplate>

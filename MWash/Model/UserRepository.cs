@@ -28,6 +28,26 @@ namespace MWash.Model
             SaveUsers();
         }
 
+        public void UpdateUser(Employee updatedEmployee)
+        {
+            // Find the existing employee based on their ID
+            Employee existingEmployee = employees.FirstOrDefault(e => e.Id == updatedEmployee.Id);
+
+            if (existingEmployee != null)
+            {
+                // Update the existing employee's properties
+                existingEmployee.LastName = updatedEmployee.LastName;
+                existingEmployee.FirstName = updatedEmployee.FirstName;
+                existingEmployee.PhoneNumber = updatedEmployee.PhoneNumber;
+
+                SaveUsers();
+            }
+            else
+            {
+                Console.WriteLine("Employee not found for update.");
+            }
+        }
+
         public List<Employee> GetUsers()
         {
             return employees;
