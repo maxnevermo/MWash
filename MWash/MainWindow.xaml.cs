@@ -1,9 +1,7 @@
 ﻿using MWash.Model;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,18 +10,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace MWash
 {
     public partial class MainWindow : Window
     {
-            private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле 
-            ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
-            UserRepository userRepository = new UserRepository();
-            ServiceRepository serviceRepository = new ServiceRepository();
+
+        System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-US");
+        private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле 
+        ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
+        UserRepository userRepository = new UserRepository();
+        ServiceRepository serviceRepository = new ServiceRepository();
 
         private ObservableCollection<Employee> employees = new ObservableCollection<Employee>();
 
@@ -31,59 +29,61 @@ namespace MWash
         public string SelectedEmployeeFullName { get; set; }  // Зберігання повного імені обраного працівника
 
         public MainWindow()
-            {
-                InitializeComponent();
+        {
+            InitializeComponent();
 
-                List<Employee> allUsers = userRepository.GetUsers();
-                List<ServiceRecord> allRecords = serviceRepository.GetUsers();
+            List<Employee> allUsers = userRepository.GetUsers();
+            List<ServiceRecord> allRecords = serviceRepository.GetUsers();
 
             DataContext = this;
 
 
-                if (allUsers != null )
+            if (allUsers != null)
+            {
+                foreach (var user in allUsers)
                 {
-                    foreach (var user in allUsers)
-                    {
-                        accounting.EmployeesList.Add(user);
-                    }
+                    accounting.EmployeesList.Add(user);
+                }
+            }
+
+            if (allRecords != null)
+            {
+                foreach (var record in allRecords)
+                {
+                    accounting.ServiceRecords.Add(record);
+                }
+            }
+            PopulateServiceDataGrid();
+
+            for (int i = 0; i < 24; i++)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (i < 10)
+                {
+                    sb.Append("0");
                 }
 
-                if(allRecords != null)
+                sb.Append(i);
+
+                StartHourComboBox.Items.Add(sb.ToString());
+                EndHourComboBox.Items.Add(sb.ToString());
+            }
+            for (int i = 0; i <= 60; i++)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (i < 10)
                 {
-                    foreach(var record in allRecords)
-                    {
-                        accounting.ServiceRecords.Add(record);
-                    }
+                    sb.Append("0");
                 }
-                PopulateServiceDataGrid();
 
-                for (int i = 0; i < 24; i++)
-                {
-                    StringBuilder sb = new StringBuilder();
+                sb.Append(i);
 
-                    if (i < 10)
-                    {
-                        sb.Append("0");
-                    }
-
-                    sb.Append(i);
-
-                    HourComboBox.Items.Add(sb.ToString());
-                }
-                for (int i = 0; i <= 60; i++)
-                {
-                    StringBuilder sb = new StringBuilder();
-
-                    if (i < 10)
-                    {
-                        sb.Append("0");
-                    }
-
-                    sb.Append(i);
-
-                    MinuteComboBox.Items.Add(sb.ToString());
-                }
-                FillEmployeeComboBox();
+                StartMinuteComboBox.Items.Add(sb.ToString());
+                EndMinuteComboBox.Items.Add(sb.ToString());
+            }
+            FillEmployeeComboBox();
         }
 
         private void FillEmployeeComboBox()
@@ -107,7 +107,6 @@ namespace MWash
             EmployeeComboBox.SelectedValuePath = "Id"; // Поле, яке ви хочете використовувати як значення в ComboBox
         }
 
-
         private void openSalaryButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
@@ -116,6 +115,8 @@ namespace MWash
             Salary.IsHitTestVisible = true;
             PopulateSalaryDataGrid();
         }
+
+
 
         private void PopulateSalaryDataGrid()
         {
@@ -160,6 +161,30 @@ namespace MWash
             Report.IsHitTestVisible = true;
         }
 
+        void openReportTableButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            ReportTable.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            ReportTable.IsHitTestVisible = true;
+        }
+
+        private void exitReportTableButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            ReportTable.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            ReportTable.IsHitTestVisible = false;
+        }
+
+        private void exitReportDateButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+            ReportDatePicker.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+            ReportDatePicker.IsHitTestVisible = false;
+        }
+
         private void exitReportButton_Click(object sender, RoutedEventArgs e)
         {
             DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
@@ -179,8 +204,10 @@ namespace MWash
             Service.IsHitTestVisible = true;
             EmployeeComboBox.Text = string.Empty;
             employessAtOneService.Clear();
-            HourComboBox.Text = string.Empty;
-            MinuteComboBox.Text = string.Empty;
+            StartHourComboBox.Text = string.Empty;
+            EndHourComboBox.Text = string.Empty;
+            StartMinuteComboBox.Text = string.Empty;
+            EndMinuteComboBox.Text = string.Empty;
             currentEmployeesDataGrid.ItemsSource = null;
         }
 
@@ -202,12 +229,12 @@ namespace MWash
                 }
                 else
                 {
-                    MessageBox.Show("Обраний працівник не знайдений. Спробуйте знову.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("The selected worker was not found. Try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Будь ласка, виберіть працівника зі списку.", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select a worker from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -254,41 +281,76 @@ namespace MWash
 
         }
 
-
         private void addServiceButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isEditing)
             {
                 string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
+                int minMinutes;
+                switch (selectedService)
+                {
+                    case "Body only":
+                        minMinutes = 15;
+                        break;
+                    case "Body and interior":
+                        minMinutes = 25;
+                        break;
+                    case "Dry cleaning":
+                        minMinutes = 60;
+                        break;
+                    default:
+                        minMinutes = 30; // Дефолтне значення
+                        break;
+                }
+
                 // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
                 Dictionary<string, int> services = new Dictionary<string, int>
                 {
-                    { "Лише кузов", 250 },
-                    { "Кузов та салон", 350 },
-                    { "Хімчистка", 1800 }
+                    { "Body only", 250 },
+                    { "Body and interior", 350 },
+                    { "Dry cleaning", 1800 }
                 };
 
 
-            if (services.ContainsKey(selectedService))
-            {
-                int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
+                if (services.ContainsKey(selectedService))
+                {
+                    int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-
-                    // Початковий та кінцевий часи надання послуг
-                    //DateTime startTime = DateTime.Now;
-                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
 
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
-                    // Отримання вибраного часу (години та хвилини)
-                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
-                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+                    if (string.IsNullOrEmpty(StartHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(StartMinuteComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndMinuteComboBox.SelectedItem?.ToString()))
+                    {
+                        MessageBox.Show("Please select both start and end times.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
+                    // Отримання вибраного часу (години та хвилини)
+                    int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
+
+                    int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
+                    int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
+
+                    
 
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                    DateTime endTime = startTime.AddMinutes(30);
+                    DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if (endTime <= startTime)
+                    {
+                        MessageBox.Show("End time should be greater than start time.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if ((endTime - startTime).TotalMinutes < minMinutes)
+                    {
+                        // Вивести повідомлення про помилку
+                        MessageBox.Show($"Minimum duration for {selectedService} is {minMinutes} minutes.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     //check if employees were entered
                     if (employessAtOneService.Count > 0)
@@ -318,46 +380,81 @@ namespace MWash
                     }
                     else
                     {
-                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                        MessageBox.Show("No worker entered", "Error");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                    MessageBox.Show("The selected service does not exist in the list.", "Error");
                 }
             }
             else
             {
                 string selectedService = ServiceComboBox.Text; // Отримання вибраної користувачем послуги зі списку
 
+                int minMinutes;
+                switch (selectedService)
+                {
+                    case "Body only":
+                        minMinutes = 15;
+                        break;
+                    case "Body and interior":
+                        minMinutes = 25;
+                        break;
+                    case "Dry cleaning":
+                        minMinutes = 60;
+                        break;
+                    default:
+                        minMinutes = 30; // Дефолтне значення
+                        break;
+                }
+
                 // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
                 Dictionary<string, int> services = new Dictionary<string, int>
                 {
-                    { "Лише кузов", 250 },
-                    { "Кузов та салон", 350 },
-                    { "Хімчистка", 1800 }
+                    { "Body only", 250 },
+                    { "Body and interior", 350 },
+                    { "Dry cleaning", 1800 }
                 };
 
                 if (services.ContainsKey(selectedService))
                 {
                     int serviceCost = services[selectedService]; // Отримання вартості вибраної послуги
 
-                    // Перевірка наявності працівника з введеними ім'ям та прізвищем у вашій системі
-                    // Якщо працівника немає, ви маєте додати логіку для його створення або вибору зі списку наявних працівників
-
-                    // Початковий та кінцевий часи надання послуг
-                    //DateTime startTime = DateTime.Now;
-                    //DateTime endTime = DateTime.Now.AddHours(1); // Припустимо, що послуга триває годину
-
                     // Створення нової послуги
                     Service newService = new Service(selectedService, (int)serviceCost);
 
+                    if (string.IsNullOrEmpty(StartHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(StartMinuteComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndHourComboBox.SelectedItem?.ToString()) || string.IsNullOrEmpty(EndMinuteComboBox.SelectedItem?.ToString()))
+                    {
+                        MessageBox.Show("Please select both start and end times.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+
                     // Отримання вибраного часу (години та хвилини)
-                    int selectedHour = int.Parse(HourComboBox.SelectedItem.ToString());
-                    int selectedMinute = int.Parse(MinuteComboBox.SelectedItem.ToString());
+                    int selectedHour = int.Parse(StartHourComboBox.SelectedItem.ToString());
+                    int selectedMinute = int.Parse(StartMinuteComboBox.SelectedItem.ToString());
+
+                    int selectedEndHour = int.Parse(EndHourComboBox.SelectedItem.ToString());
+                    int selectedEndMinute = int.Parse(EndMinuteComboBox.SelectedItem.ToString());
+
+                    
 
                     DateTime startTime = DateTime.Today.AddHours(selectedHour).AddMinutes(selectedMinute);
-                    DateTime endTime = startTime.AddMinutes(30);
+                    DateTime endTime = DateTime.Today.AddHours(selectedEndHour).AddMinutes(selectedEndMinute);
+
+                    if (endTime <= startTime)
+                    {
+                        MessageBox.Show("End time should be greater than start time.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if ((endTime - startTime).TotalMinutes < minMinutes)
+                    {
+                        // Вивести повідомлення про помилку
+                        MessageBox.Show($"Minimum duration for {selectedService} is {minMinutes} minutes.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     //check if employees were entered
                     if (employessAtOneService.Count > 0)
@@ -371,7 +468,7 @@ namespace MWash
                             allEmplyees.Add(employee);
                         }
                         // Створення запису про надання послуги з вибраним працівником
-                        ServiceRecord newServiceRecord = accounting.ServiceRecords[editIndex-1];
+                        ServiceRecord newServiceRecord = accounting.ServiceRecords[editIndex - 1];
 
                         newServiceRecord.Service = newService;
                         newServiceRecord.Employees = allEmplyees;
@@ -393,15 +490,15 @@ namespace MWash
                     }
                     else
                     {
-                        MessageBox.Show("Не введено жодного працівника", "Помилка");
+                        MessageBox.Show("No worker entered.", "Error");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Вибрана послуга не існує у списку.", "Помилка");
+                    MessageBox.Show("The selected service does not exist in the list.", "Error");
                 }
             }
-            
+
         }
 
         private void exitServiceButton_Click(object sender, RoutedEventArgs e)
@@ -424,7 +521,7 @@ namespace MWash
         private void PopulateEmployeesDataGrid()
         {
             int i = 1;
-            foreach(var item in accounting.EmployeesList)
+            foreach (var item in accounting.EmployeesList)
             {
                 item.Id = i;
                 i++;
@@ -468,15 +565,21 @@ namespace MWash
 
         private void PopulateServiceDataGrid()
         {
+            // Отримання сьогоднішньої дати
+            DateTime currentDate = DateTime.Now.Date;
+
             // Accessing the ServiceRecords collection from MWashAccounting
-            var serviceDataList = accounting.ServiceRecords.Select((record, index) => new
-            {
-                Number = index + 1,
-                Employee = string.Join(", ", record.Employees.Select(emp => $"{emp.FirstName} {emp.LastName}")),
-                Service = record.Service.ServiceName,
-                Price = record.Service.ServiceCost,
-                Time = record.StartTime.ToString("dd MMMM, yyyy HH:mm:ss")
-            }).ToList();
+            var serviceDataList = accounting.ServiceRecords
+                .Where(record => record.StartTime.Date == currentDate) // Фільтруємо записи за сьогоднішньою датою
+                .Select((record, index) => new
+                {
+                    Number = index + 1,
+                    Employee = string.Join(", ", record.Employees.Select(emp => $"{emp.FirstName} {emp.LastName}")),
+                    Service = record.Service.ServiceName,
+                    Price = record.Service.ServiceCost,
+                    Time = $"{record.StartTime.ToString("HH:mm", culture)} - {record.EndTime.ToString("HH:mm", culture)}"
+                })
+                .ToList();
 
             // Clearing ServiceDataGrid before adding new data
             ServiceDataGrid.ItemsSource = null;
@@ -485,14 +588,32 @@ namespace MWash
             ServiceDataGrid.ItemsSource = serviceDataList;
         }
 
+
         private void AddEmployeeToTableButton_Click(object sender, RoutedEventArgs e)
         {
+
             if (!isEmployeeEdit)
             {
-                string surname = Surname.Text;
-                string name = Name.Text;
-                string phone = Phone.Text;
-                int id = accounting.EmployeesList.Count + 1;
+
+            string surname = Surname.Text;
+            string name = Name.Text;
+            string phone = Phone.Text;
+            int id = accounting.EmployeesList.Count + 1;
+
+            // Перевірка на введення лише букв латини для прізвища та імені
+            if (!Regex.IsMatch(name, @"^[A-Za-z-]{1,60}$") || !Regex.IsMatch(surname, @"^[A-Za-z-]{1,60}$"))
+            {
+                MessageBox.Show("Please enter a valid name and surname (only Latin letters and hyphen, maximum 60 characters, minimum 1).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Перевірка на введення лише '+', а потім дванадцять цифр для номеру телефону
+            if (!Regex.IsMatch(phone, @"^\+[0-9]{12}$"))
+            {
+                MessageBox.Show("Please enter a valid phone number (starts with '+', followed by twelve digits).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
 
                 Employee employee = new Employee(surname, name, phone, id);
 
@@ -513,6 +634,7 @@ namespace MWash
                 AddEmployee.IsHitTestVisible = false;
 
                 FillEmployeeComboBox();
+
             }
             else
             {
@@ -526,6 +648,7 @@ namespace MWash
                 employee.FirstName = name;
                 employee.PhoneNumber = phone;
 
+
                 userRepository.UpdateUser(employee);
 
                 PopulateEmployeesDataGrid();
@@ -537,8 +660,8 @@ namespace MWash
                 FillEmployeeComboBox();
             }
             
-
         }
+
 
         async private void DeleteEmployeeFromTableButton_Click(object sender, RoutedEventArgs e)
         {
@@ -616,9 +739,9 @@ namespace MWash
                         await Task.Delay(300);
 
                         // Delete the item from the underlying data source
-                        if (index-1 >= 0 && index-1 < accounting.ServiceRecords.Count)
+                        if (index - 1 >= 0 && index - 1 < accounting.ServiceRecords.Count)
                         {
-                            accounting.ServiceRecords.RemoveAt(index-1);
+                            accounting.ServiceRecords.RemoveAt(index - 1);
                         }
                         else
                         {
@@ -676,13 +799,13 @@ namespace MWash
                         if (index - 1 >= 0 && index - 1 < accounting.ServiceRecords.Count)
                         {
                             editIndex = index;
-                            ServiceRecord newServiceRecord = accounting.ServiceRecords[index-1];
+                            ServiceRecord newServiceRecord = accounting.ServiceRecords[index - 1];
 
                             DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                             Service.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
 
-                            HourComboBox.SelectedIndex = newServiceRecord.StartTime.Hour;
-                            MinuteComboBox.SelectedIndex = newServiceRecord.StartTime.Minute;
+                            StartHourComboBox.SelectedIndex = newServiceRecord.StartTime.Hour;
+                            StartMinuteComboBox.SelectedIndex = newServiceRecord.StartTime.Minute;
                             ServiceComboBox.Text = newServiceRecord.Service.ServiceName;
                             Service.IsHitTestVisible = true;
                             EmployeeNameTextBox.Text = "";
@@ -704,6 +827,28 @@ namespace MWash
         }
 
 
+        /////////////////////
+        private List<object> FormatDataForDataGrid(List<(string ServiceName, int TotalCount, double CostPerService)> data)
+        {
+            return data.Select((record, index) => new
+            {
+                Number = index + 1,
+                ServiceName = record.ServiceName,
+                TotalCount = record.TotalCount,
+                CostPerService = record.CostPerService,
+                TotalCost = record.TotalCount * record.CostPerService // Нова властивість для сумарної вартості
+            }).ToList<object>();
+        }
+        private void PopulateDataGrid(List<(string ServiceName, int TotalCount, double CostPerService)> data, DataGrid dataGrid)
+        {
+            var formattedData = FormatDataForDataGrid(data);
+
+            dataGrid.ItemsSource = null;
+            dataGrid.ItemsSource = formattedData;
+        }
+
+
+
         private void GenerateReport(object sender, RoutedEventArgs e)
         {
             var selectedItem = ReportComboBox.SelectedItem as ComboBoxItem;
@@ -712,42 +857,68 @@ namespace MWash
             {
                 string selectedOption = selectedItem.Content.ToString();
 
-                if (selectedOption == "за день")
+                if (selectedOption == "per day")
                 {
-                    // Отримати поточну дату для формування звіту за день
                     DateTime currentDate = DateTime.Now;
-                    accounting.GenerateReportForDay(currentDate);
+
+                    ReportDateTextBlock.Text = currentDate.ToString("d MMM yyyy", culture);
+                    List<(string ServiceName, int TotalCount, double CostPerService)> dailyReportData = accounting.GenerateDailyReportForGrid(currentDate);
+
+                    // Отримання загальної суми вартості для усіх послуг
+                    double totalCost = dailyReportData.Sum(record => record.TotalCount * record.CostPerService);
+
+                    // Виведення сумарної вартості у TextBlock
+                    TotalCostTextBlock.Text = $"Total Cost: {totalCost}";
+
+                    // Використовуємо метод для заповнення DailyReportDataGrid
+                    PopulateDataGrid(dailyReportData, DailyReportDataGrid);
+
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    ReportTable.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+                    ReportTable.IsHitTestVisible = true;
+
+                    if (CreateFileCheckBox.IsChecked == true)
+                    {
+                        accounting.GenerateFileReportForDay(currentDate);
+                    }
                 }
-                else if (selectedOption == "за тиждень")
+                else if (selectedOption == "per week")
                 {
                     // Отримати дати для формування звіту за тиждень (останній тиждень)
                     DateTime endDate = DateTime.Now;
                     DateTime startDate = endDate.AddDays(-7);
-                    accounting.GenerateReportForWeek(startDate);
+
+                    ReportDateTextBlock.Text = $"{startDate.ToString("d MMM yyyy", culture)} - {endDate.ToString("d MMM yyyy", culture)}";
+
+
+                    List<(string ServiceName, int TotalCount, double CostPerService)> weeklyReportData = accounting.GenerateWeeklyReportForGrid(endDate);
+
+                    // Отримання загальної суми вартості для усіх послуг
+                    double totalCost = weeklyReportData.Sum(record => record.TotalCount * record.CostPerService);
+
+                    // Виведення сумарної вартості у TextBlock
+                    TotalCostTextBlock.Text = $"Total Cost: {totalCost}";
+
+                    // Використовуємо метод для заповнення DailyReportDataGrid
+                    PopulateDataGrid(weeklyReportData, DailyReportDataGrid);
+
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    ReportTable.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+                    ReportTable.IsHitTestVisible = true;
 
                     // Якщо користувач вибрав "Створити файл звіту", зберегти звіт у текстовий файл
                     if (CreateFileCheckBox.IsChecked == true)
                     {
-                        // Зберегти звіт у текстовий файл
-                        // Вам необхідно додати відповідний код для збереження у файлі звіту за тиждень
-                        // Наприклад:
-                        // accounting.SaveReportToFile("Звіт_за_тиждень.txt", reportContent);
+                        accounting.GenerateFileReportForWeek(startDate);
                     }
                 }
-                else if (selectedOption == "за обраний проміжок часу")
-                {
-                    // Отримати обраний проміжок часу для формування звіту
-                    // DateTime selectedStartDate = ...; // введіть обрану користувачем початкову дату
-                    // DateTime selectedEndDate = ...;   // введіть обрану користувачем кінцеву дату
-                    // Ваш код для формування звіту за обраний проміжок часу
-                    // accounting.GenerateReportForSelectedPeriod(selectedStartDate, selectedEndDate);
 
-                    // Якщо користувач вибрав "Створити файл звіту", додайте код для збереження у текстовий файл
-                    if (CreateFileCheckBox.IsChecked == true)
-                    {
-                        // Зберегти звіт у текстовий файл
-                        // Вам необхідно додати відповідний код для збереження у файлі звіту за обраний проміжок часу
-                    }
+
+                else if (selectedOption == "for the selected period of time")
+                {
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    ReportDatePicker.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+                    ReportDatePicker.IsHitTestVisible = true;
                 }
             }
         }
@@ -786,6 +957,47 @@ namespace MWash
 
                 }
             }
+        }
+        private void ConfirmDateReport(object sender, RoutedEventArgs e) {
+            // Отримання обраних користувачем початкової та кінцевої дат для формування звіту
+            DateTime selectedStartDate = startDatePicker.SelectedDate.GetValueOrDefault(); // Початкова дата, обрана користувачем
+            DateTime selectedEndDate = endDatePicker.SelectedDate.GetValueOrDefault(); // Кінцева дата, обрана користувачем
+
+            if (selectedStartDate > DateTime.Today || selectedEndDate > DateTime.Today)
+            {
+                MessageBox.Show("Please select dates equal to or less than today's date.", "Invalid Date Selection", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (selectedStartDate > selectedEndDate)
+            {
+                MessageBox.Show("End date should be greater than or equal to the start date.", "Invalid Date Range", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Генерація звіту за обраним проміжком часу
+            List<(string ServiceName, int TotalCount, double CostPerService)> selectedPeriodReportData = accounting.GenerateReportForSelectedPeriod(selectedStartDate, selectedEndDate);
+
+            // Отримання загальної суми вартості для усіх послуг
+            double totalCost = selectedPeriodReportData.Sum(record => record.TotalCount * record.CostPerService);
+
+            // Виведення сумарної вартості у TextBlock
+            TotalCostTextBlock.Text = $"Total Cost: {totalCost}";
+
+            ReportDateTextBlock.Text = $"{selectedStartDate.ToString("d MMM yyyy", culture)} - {selectedEndDate.ToString("d MMM yyyy", culture)}";
+
+            // Якщо користувач вибрав "Створити файл звіту", додайте код для збереження у текстовий файл
+            if (CreateFileCheckBox.IsChecked == true)
+            {
+                accounting.GenerateFileReportForSelectedPeriod(selectedStartDate, selectedEndDate);
+            }
+
+            // Використання методу для заповнення DailyReportDataGrid отриманими даними
+            PopulateDataGrid(selectedPeriodReportData, DailyReportDataGrid);
+
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            ReportTable.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+            ReportTable.IsHitTestVisible = true;
         }
     }
 }
