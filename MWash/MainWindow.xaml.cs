@@ -591,6 +591,10 @@ namespace MWash
 
         private void AddEmployeeToTableButton_Click(object sender, RoutedEventArgs e)
         {
+
+            if (!isEmployeeEdit)
+            {
+
             string surname = Surname.Text;
             string name = Name.Text;
             string phone = Phone.Text;
@@ -611,25 +615,51 @@ namespace MWash
             }
 
 
-            Employee employee = new Employee(surname, name, phone, id);
+                Employee employee = new Employee(surname, name, phone, id);
 
-            if (!accounting.EmployeesList.Contains(employee))
-            {
-                accounting.EmployeesList.Add(employee);
-                userRepository.AddUser(employee);
+                if (!accounting.EmployeesList.Contains(employee))
+                {
+                    accounting.EmployeesList.Add(employee);
+                    userRepository.AddUser(employee);
+                }
+                else
+                {
+                    MessageBox.Show("Employee already exists", "Duplicate Employee", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                PopulateEmployeesDataGrid();
+                DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                AddEmployee.IsHitTestVisible = false;
+
+                FillEmployeeComboBox();
+
             }
             else
             {
-                MessageBox.Show("Employee already exists", "Duplicate Employee", MessageBoxButton.OK, MessageBoxImage.Information);
+                string surname = Surname.Text;
+                string name = Name.Text;
+                string phone = Phone.Text;
+
+                Employee employee = accounting.EmployeesList[editEmployee];
+
+                employee.LastName = surname;
+                employee.FirstName = name;
+                employee.PhoneNumber = phone;
+
+
+                userRepository.UpdateUser(employee);
+
+                PopulateEmployeesDataGrid();
+                DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
+                AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+
+                AddEmployee.IsHitTestVisible = false;
+
+                FillEmployeeComboBox();
             }
-
-            PopulateEmployeesDataGrid();
-            DoubleAnimation fadeOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
-            AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
-
-            AddEmployee.IsHitTestVisible = false;
-
-            FillEmployeeComboBox();
+            
         }
 
 
@@ -893,6 +923,41 @@ namespace MWash
             }
         }
 
+        bool isEmployeeEdit = false;
+        int editEmployee = -1;
+        private void EditEmployeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            isEmployeeEdit = true;
+            Employee itemToDelete = (sender as Button).Tag as Employee;
+
+            if (itemToDelete != null)
+            {
+                //get row to delete
+                DataGridRow row = EmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
+
+                if (row != null)
+                {
+                    int index = accounting.EmployeesList.IndexOf(itemToDelete);
+
+                    editEmployee = index;
+                    Employee newEmployee = accounting.EmployeesList[index];
+
+                    DoubleAnimation fadeOutAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    AddEmployee.BeginAnimation(UIElement.OpacityProperty, fadeOutAnimation);
+                    AddEmployee.IsHitTestVisible = true;
+
+
+                    Surname.Text = newEmployee.LastName;
+                    Name.Text = newEmployee.FirstName;
+                    Phone.Text = newEmployee.PhoneNumber;
+
+
+                    PopulateEmployeesDataGrid();
+                    FillEmployeeComboBox();
+
+                }
+            }
+        }
         private void ConfirmDateReport(object sender, RoutedEventArgs e) {
             // Отримання обраних користувачем початкової та кінцевої дат для формування звіту
             DateTime selectedStartDate = startDatePicker.SelectedDate.GetValueOrDefault(); // Початкова дата, обрана користувачем
