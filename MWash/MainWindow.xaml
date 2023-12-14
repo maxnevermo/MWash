@@ -612,7 +612,7 @@
                                 <DataGridTextColumn Header="Name" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding FirstName}"/>
                                 <DataGridTextColumn Header="Phone number" CanUserResize="False" IsReadOnly="True" Width="*" Binding="{Binding PhoneNumber}"/>
 
-                                <DataGridTemplateColumn Header="Remove" CanUserResize="False" IsReadOnly="True" Width="*">
+                                <DataGridTemplateColumn Header="Manipulate" CanUserResize="False" IsReadOnly="True" Width="*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
@@ -652,7 +652,7 @@
                         <Button Background="#000000" 
                                 Opacity="0.3" 
                                 Click="exitAddEmployeeButton_Click" 
-                                Style="{StaticResource NoHoverButtonStyle}"/>
+                                Style="{StaticResource NoHoverButtonStyle}" Content="``"/>
 
                         <Border Background="#fff" Width="570" Height="500" CornerRadius="15">
                             <Grid>
