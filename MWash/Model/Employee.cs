@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MWash
 {
+    //Структура даних для зберіганні інформації про працівника
     public class Employee
     {
         public string LastName { get; set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MWash
 {
+    //Структура даних для збереження інформації про послугу
     public class Service
     {
         public string ServiceName { get; set; }

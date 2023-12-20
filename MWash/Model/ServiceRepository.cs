@@ -10,11 +10,11 @@ using Newtonsoft.Json;
 
 namespace MWash.Model
 {
-
+    // Додавання послуги у файл для організації сховища даних
     public class ServiceRepository
     {
         private List<ServiceRecord> services = new List<ServiceRecord>();
-        private string filePath = "services.json"; // Adjust the file path as needed
+        private string filePath = "services.json"; // Фізичний файл для збереження усіх послуг
 
         public void AddUser(ServiceRecord servicerecord)
         {
@@ -23,7 +23,6 @@ namespace MWash.Model
         }
         public void UpdateUser(ServiceRecord updatedServiceRecord)
         {
-            // Find the existing record based on some criteria, for example, ID
             ServiceRecord existingServiceRecord = services.FirstOrDefault(sr =>
                             sr.Employees.SequenceEqual(updatedServiceRecord.Employees) &&
                             sr.StartTime == updatedServiceRecord.StartTime);
@@ -42,15 +41,16 @@ namespace MWash.Model
                 Console.WriteLine("Service record not found for update.");
             }
         }
-        public void DeleteUser(ServiceRecord servicerecord)
-        {
-            services.Remove(servicerecord);
-            SaveUsers();
-        }
 
         public List<ServiceRecord> GetUsers()
         {
             return services;
+        }
+
+        public void DeleteUser(ServiceRecord servicerecord)
+        {
+            services.Remove(servicerecord);
+            SaveUsers();
         }
 
         private void SaveUsers()

@@ -18,7 +18,7 @@ namespace MWash
     {
 
         System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-US");
-        private MWashAccounting accounting = new MWashAccounting(); // Додайте це поле 
+        private MWashAccounting accounting = new MWashAccounting(); 
         ObservableCollection<Employee> employessAtOneService = new ObservableCollection<Employee>();
         UserRepository userRepository = new UserRepository();
         ServiceRepository serviceRepository = new ServiceRepository();
@@ -246,12 +246,12 @@ namespace MWash
 
             if (itemToDelete != null)
             {
-                //get row to delete
+                //Отримання рядка для видалення
                 DataGridRow row = currentEmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
 
                 if (row != null)
                 {
-                    //animation for delete
+                    //Анімація видалення
                     var storyboard = new Storyboard();
 
                     var opacityAnimation = new DoubleAnimation
@@ -268,12 +268,12 @@ namespace MWash
 
                     await Task.Delay(300);
 
-                    //delete elemenet
+                    //Видалити працівника
 
                     employessAtOneService.Remove(itemToDelete);
 
 
-                    //refresh table
+                    //Оновити таблицю
                     CollectionViewSource.GetDefaultView(currentEmployeesDataGrid.ItemsSource).Refresh();
 
                 }
@@ -456,10 +456,9 @@ namespace MWash
                         return;
                     }
 
-                    //check if employees were entered
                     if (employessAtOneService.Count > 0)
                     {
-                        //create list with all employees that were added to atOneService table
+                        //Створення списку усіх працівників, які були залучені до послуги
 
                         List<Employee> allEmplyees = new List<Employee>();
 
@@ -568,7 +567,7 @@ namespace MWash
             // Отримання сьогоднішньої дати
             DateTime currentDate = DateTime.Now.Date;
 
-            // Accessing the ServiceRecords collection from MWashAccounting
+            // Доступ до таблиці записів послуг
             var serviceDataList = accounting.ServiceRecords
                 .Where(record => record.StartTime.Date == currentDate) // Фільтруємо записи за сьогоднішньою датою
                 .Select((record, index) => new
@@ -581,10 +580,10 @@ namespace MWash
                 })
                 .ToList();
 
-            // Clearing ServiceDataGrid before adding new data
+            // Очищення таблиці перед додаванням нової послуги
             ServiceDataGrid.ItemsSource = null;
 
-            // Adding the updated data to ServiceDataGrid
+            // Демонстрація видозміненої таблиці
             ServiceDataGrid.ItemsSource = serviceDataList;
         }
 
@@ -669,13 +668,13 @@ namespace MWash
 
             if (itemToDelete != null)
             {
-                //get row to delete
+                //Отримання рядка для видалення
                 DataGridRow row = EmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
 
                 if (row != null)
                 {
                     int index = accounting.EmployeesList.IndexOf(itemToDelete);
-                    //animation for delete
+                    //Анімація видалення
                     var storyboard = new Storyboard();
 
                     var opacityAnimation = new DoubleAnimation
@@ -692,13 +691,13 @@ namespace MWash
 
                     await Task.Delay(300);
 
-                    //delete elemenet
+                    //Видалення працівника
 
                     accounting.EmployeesList.RemoveAt(index);
                     userRepository.DeleteUser(itemToDelete);
                     accounting.ServiceRecords = new ObservableCollection<ServiceRecord>(serviceRepository.GetUsers());
 
-                    //refresh table
+                    //Оновлення таблиці
                     PopulateEmployeesDataGrid();
                     FillEmployeeComboBox();
 
@@ -716,10 +715,10 @@ namespace MWash
 
                 if (propertyInfo != null)
                 {
-                    // Get the value of the 'id' property and try parsing it as an integer
+                    // Отримання ID послуги
                     if (int.TryParse(propertyInfo.GetValue(taggedObject)?.ToString(), out int index))
                     {
-                        // Animation for delete
+                        // Анімація видалення
                         DataGridRow row = ServiceDataGrid.ItemContainerGenerator.ContainerFromItem(taggedObject) as DataGridRow;
 
                         var storyboard = new Storyboard();
@@ -735,17 +734,15 @@ namespace MWash
 
                         storyboard.Begin();
 
-                        // Wait for the animation to complete
                         await Task.Delay(300);
 
-                        // Delete the item from the underlying data source
                         if (index - 1 >= 0 && index - 1 < accounting.ServiceRecords.Count)
                         {
                             accounting.ServiceRecords.RemoveAt(index - 1);
                         }
                         else
                         {
-                            // Handle the case where the index is out of range
+                            // Обробка події, якщо індекс поза межами
                             Console.WriteLine("Index is out of range.");
                         }
 
@@ -790,7 +787,7 @@ namespace MWash
 
                 if (propertyInfo != null)
                 {
-                    // Get the value of the 'id' property and try parsing it as an integer
+                    // Отримання ID послуги для видозміни
                     if (int.TryParse(propertyInfo.GetValue(taggedObject)?.ToString(), out int index))
                     {
                         DataGridRow row = ServiceDataGrid.ItemContainerGenerator.ContainerFromItem(taggedObject) as DataGridRow;
@@ -932,7 +929,6 @@ namespace MWash
 
             if (itemToDelete != null)
             {
-                //get row to delete
                 DataGridRow row = EmployeesDataGrid.ItemContainerGenerator.ContainerFromItem(itemToDelete) as DataGridRow;
 
                 if (row != null)

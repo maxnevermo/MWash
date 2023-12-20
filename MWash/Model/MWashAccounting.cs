@@ -108,6 +108,7 @@ namespace MWash
             return employeeReport;
         }
 
+        //Функція для обрахунку денної зарплати працівників
         public double CalculateDailySalary(Employee employee)
         {
             DateTime currentDate = DateTime.Now.Date;
@@ -136,7 +137,7 @@ namespace MWash
             return employeeDailySalary;
         }
 
-
+        //Вивід даних про послугу у таблицю
         public List<(string Employee, string Service, int Price, DateTime Time)> GetServiceDataForGrid(DateTime date)
         {
             var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
@@ -153,6 +154,7 @@ namespace MWash
             return serviceDataForGrid;
         }
 
+        //Функція для створення файлу зі звітністю за день
         public void GenerateFileReportForDay(DateTime date)
         {
             string fileName = $"{date:dd-MM-yyyy}.txt";
@@ -197,7 +199,7 @@ namespace MWash
         }
 
 
-
+        //Функція для створення файлу зі звітністю за тиждень
         public void GenerateFileReportForWeek(DateTime startDate)
         {
             DateTime endDate = startDate.AddDays(7); // Calculate the end date (a week from the start date)
@@ -232,7 +234,7 @@ namespace MWash
                 }
             }
 
-            // Display weekly summary in the report content
+            //Вивід тижневого заробітку
             foreach (var service in weeklyReport)
             {
                 reportContent.AppendLine($"Service: {service.ServiceName}");
@@ -242,7 +244,7 @@ namespace MWash
                 reportContent.AppendLine("--------------------------------------");
             }
 
-            //total earning
+            //Розрахунок та вивід усього заробітку
             double totalEarnings = weeklyReport.Sum(service => service.TotalPrice);
             reportContent.AppendLine($"Total earnings for the period: {totalEarnings}");
 
@@ -252,13 +254,12 @@ namespace MWash
             saveFileDialog.FileName = fileName;
             saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
 
-            // Save report to text file
+            // Збереження звіту до файлу
             if (saveFileDialog.ShowDialog() == true)
             {
                 string filePath = saveFileDialog.FileName;
                 try
                 {
-                    //string filePath = $"{Environment.CurrentDirectory}\\{fileName}";
                     System.IO.File.WriteAllText(filePath, reportContent.ToString());
                     Console.WriteLine($"Report generated successfully. Saved to {filePath}");
                 }
@@ -268,7 +269,7 @@ namespace MWash
                 }
             }
         }
-
+        //Функція для створення файлу зі звітністю за певний проміжок часу
         public void GenerateFileReportForSelectedPeriod(DateTime startDate, DateTime endDate)
         {
             string fileName = $"{startDate:dd-MM-yyyy}_to_{endDate:dd-MM-yyyy}.txt";
@@ -278,12 +279,12 @@ namespace MWash
 
             List<(string ServiceName, int TotalTime, int TotalCount, int TotalPrice)> periodReport = new List<(string ServiceName, int TotalTime, int TotalCount, int TotalPrice)>();
 
-            // Gather data for the specified period
+            // Збір даних для певного періоду
             for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
             {
                 List<(string ServiceName, int TotalTime, int TotalCount, int TotalPrice)> dailyReport = GenerateDailyReport(date);
 
-                // Aggregate data for the period
+                // Узагальнення даних
                 foreach (var service in dailyReport)
                 {
                     var existingService = periodReport.FirstOrDefault(s => s.ServiceName == service.ServiceName);
@@ -302,7 +303,7 @@ namespace MWash
                 }
             }
 
-            // Display summary for the selected period in the report content
+            // Вивід заробітку для вказаного періоду
             foreach (var service in periodReport)
             {
                 reportContent.AppendLine($"Service: {service.ServiceName}");
@@ -312,23 +313,22 @@ namespace MWash
                 reportContent.AppendLine("--------------------------------------");
             }
 
-            //total earning
+            //Весь заробіток за деякий період
             double totalEarnings = periodReport.Sum(service => service.TotalPrice);
             reportContent.AppendLine($"Total earnings for the period: {totalEarnings}");
 
 
-            // Save report to text file
+            // Вибір файлу для збереження звіту
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
             saveFileDialog.FileName = fileName;
             saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
 
-            // Save report to text file
+            // Збереження звіту у файл
             if (saveFileDialog.ShowDialog() == true)
             {
                 string filePath = saveFileDialog.FileName;
                 try
                 {
-                    //string filePath = $"{Environment.CurrentDirectory}\\{fileName}";
                     System.IO.File.WriteAllText(filePath, reportContent.ToString());
                     Console.WriteLine($"Report generated successfully. Saved to {filePath}");
                 }
@@ -340,7 +340,7 @@ namespace MWash
         }
 
 
-
+        //Створення денного звіту таблицею
         public List<(string ServiceName, int TotalCount, double CostPerService)> GenerateDailyReportForGrid(DateTime date)
         {
             var recordsForDate = ServiceRecords.Where(record => record.StartTime.Date == date.Date).ToList();
@@ -349,10 +349,10 @@ namespace MWash
             foreach (var record in recordsForDate)
             {
                 var serviceName = record.Service.ServiceName;
-                var totalCount = 1; // Assume each record represents one service usage
-                var costPerService = record.Service.ServiceCost; // Cost for the service
+                var totalCount = 1; // Підсумовуємо кількість виконаних послуг
+                var costPerService = record.Service.ServiceCost; // Ціна за послуги
 
-                // Check if the service name already exists in the list
+                // Перевіряємо, чи дана послуга вже є у таблиці
                 var existingService = serviceDataForGrid.FirstOrDefault(s => s.ServiceName == serviceName);
                 if (existingService.Equals(default))
                 {
@@ -360,14 +360,13 @@ namespace MWash
                 }
                 else
                 {
-                    // Create a new instance of the tuple to modify its members
+                    // Змінюємо кількість послуг
                     var modifiedService = existingService;
 
-                    // Update the existing service entry in the list
+                    // Оновлюємо кількість послуг
                     var index = serviceDataForGrid.IndexOf(existingService);
                     modifiedService = (modifiedService.ServiceName, modifiedService.TotalCount + totalCount, modifiedService.CostPerService + costPerService);
 
-                    // Replace the existing tuple in the list with the modified one
                     serviceDataForGrid[index] = modifiedService;
                 }
             }
@@ -376,12 +375,12 @@ namespace MWash
 
             foreach (var service in serviceDataForGrid)
             {
-                // Calculate the cost per service and add it to the new collection
+                // Розрахунок вартості послуг
                 double costPerService = service.CostPerService / service.TotalCount;
                 updatedServiceDataForGrid.Add((service.ServiceName, service.TotalCount, costPerService));
             }
 
-            // Replace the original collection with the updated one
+            // Заміна попередньої колекції послуг на нову
             serviceDataForGrid = updatedServiceDataForGrid;
 
             return serviceDataForGrid;

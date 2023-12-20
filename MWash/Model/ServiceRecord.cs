@@ -8,6 +8,7 @@ using static MWash.MainWindow;
 
 namespace MWash
 {
+    // Структура даних для збереження інформації про ВИБРАНУ послугу
         public class ServiceRecord
         {
             public List<Employee> Employees { get; set; }

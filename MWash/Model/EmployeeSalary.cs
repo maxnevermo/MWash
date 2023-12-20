@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MWash
 {
+    //структура даних для формування денної зарплати працівників
     public class EmployeeSalary
     {
         public string Surname { get; set; }

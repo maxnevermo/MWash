@@ -8,6 +8,7 @@ using System.Windows.Data;
 
 namespace MWash.Model
 {
+    //конвертація дати для її виведення при формуванні звіту
     public class DateTimeConverter : IValueConverter
     {
         public string Format { get; set; } = "d MMM yyyy";
