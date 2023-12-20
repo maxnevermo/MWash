@@ -202,7 +202,7 @@ namespace MWash
 
             ServiceComboBox.Text = string.Empty;
             Service.IsHitTestVisible = true;
-            EmployeeComboBox.Text = string.Empty;
+            //EmployeeComboBox.Text = string.Empty;
             employessAtOneService.Clear();
             StartHourComboBox.Text = string.Empty;
             EndHourComboBox.Text = string.Empty;
@@ -304,7 +304,7 @@ namespace MWash
                         break;
                 }
 
-                // Ініціалізація словаря для зберігання відповідності назв послуг та їх вартостей
+                // Ініціалізація  для зберігання відповідності назв послуг та їх вартостей
                 Dictionary<string, int> services = new Dictionary<string, int>
                 {
                     { "Body only", 250 },

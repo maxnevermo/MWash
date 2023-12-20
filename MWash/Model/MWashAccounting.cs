@@ -20,18 +20,31 @@ namespace MWash
             ServiceRecords = new ObservableCollection<ServiceRecord>();
             EmployeesList = new List<Employee>();   
         }
-        
+
         // Метод для додавання нового запису про надану послугу
         public void AddServiceRecord(ServiceRecord serviceRecord)
         {
-
             // Перевірка наявності вільних боксів перед додаванням нового запису про надану послугу
             var numberOfOccupiedBoxes = ServiceRecords
                 .Count(record => record.StartTime <= serviceRecord.EndTime && record.EndTime >= serviceRecord.StartTime);
 
-            // Якщо кількість зайнятих боксів менше двох, можна додати новий запис про надану послугу
             if (numberOfOccupiedBoxes < 2)
             {
+                // Перевірка, чи працівники не зайняті на іншій послузі у цей час
+                foreach (var employee in serviceRecord.Employees)
+                {
+                    bool isEmployeeOccupied = ServiceRecords
+                        .Any(record => record.Employees.Any(emp => emp.Id == employee.Id &&
+                                                                  record.StartTime <= serviceRecord.EndTime &&
+                                                                  record.EndTime >= serviceRecord.StartTime));
+
+                    if (isEmployeeOccupied)
+                    {
+                        MessageBox.Show($"{employee.FirstName} {employee.LastName} is already occupied at this time.", "Error");
+                        return;
+                    }
+                }
+
                 ServiceRecords.Add(serviceRecord);
                 Console.WriteLine("Service record added successfully.");
             }
@@ -40,6 +53,7 @@ namespace MWash
                 MessageBox.Show("All service boxes are currently occupied. Cannot add a new service record.", "Error");
             }
         }
+
 
 
         public List<(string ServiceName, int TotalTime, int TotalCount, int TotalPrice)> GenerateDailyReport(DateTime date)
